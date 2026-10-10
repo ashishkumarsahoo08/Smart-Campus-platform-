@@ -1,0 +1,3461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Smart Campus | Mobile Portal</title>
+  <meta name="description" content="Unified Smart Campus Mobile App with Role-Based Portals.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="unauthenticated">
+
+  <!-- TOP APP BAR -->
+  <header class="app-header" id="appHeader">
+    <div class="header-left">
+      <!-- Profile Avatar Icon Button (Shown on Main Pages when Logged In) -->
+      <button type="button" class="header-user-avatar-btn" id="btnUserProfileLeft" aria-label="My Profile & Settings" title="View & Manage Profile" style="display: none;">
+        <div class="user-avatar-inner" id="headerLeftAvatarContainer">
+          <!-- Men structure silhouette icon default or user uploaded photo -->
+          <svg class="avatar-man-icon" id="headerLeftManIcon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <img class="avatar-uploaded-img" id="headerLeftAvatarImg" style="display: none;" alt="User Photo">
+        </div>
+      </button>
+
+      <div class="brand-wrapper">
+        <h1 class="brand-heading" id="brandHeading">Smart Campus</h1>
+        <div class="page-indicator-badge">
+          <span>●</span>
+          <span id="currentViewTitle">Campus Portal</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <!-- Clean Language Selector -->
+      <select class="lang-picker-mini" id="localeSelect" aria-label="Select Regional Language" style="background:#151928; color:#cbd5e1; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:4px 8px; font-size:0.75rem;">
+        <option value="en">English</option>
+        <option value="or">ଓଡ଼ିଆ (Odia)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+      </select>
+      <!-- Notification Bell with Badge -->
+      <button type="button" class="btn-notification-bell" id="btnNotificationBell" style="display:none; background:transparent; border:none; color:#cbd5e1; font-size:1.15rem; cursor:pointer; position:relative; padding:4px 8px;" title="Notifications">
+        <span>🔔</span>
+        <span id="headerNotifBadge" style="position:absolute; top:0; right:2px; background:#ef4444; color:#fff; font-size:0.6rem; font-weight:800; border-radius:10px; padding:1px 5px;">3</span>
+      </button>
+      <button type="button" class="user-avatar-btn" id="btnHeaderAvatar" style="display:none;" title="View Profile">
+        <span id="avatarInitials">SC</span>
+      </button>
+      <!-- Three Dots Quick Menu Button -->
+      <button type="button" class="header-three-dots-btn" id="btnHeaderMoreDots" style="display:none;" aria-label="More Quick Actions" title="More Quick Options">&#8942;</button>
+    </div>
+
+    <!-- Header Three-Dots Quick Dropdown Menu -->
+    <div class="header-dropdown-menu" id="menuHeaderMore">
+      <button type="button" class="dropdown-menu-item" id="menuDropProfile">
+        <span>👤</span> <span>My Profile & Campus ID</span>
+      </button>
+      <button type="button" class="dropdown-menu-item" id="menuDropDigitalId">
+        <span>🪪</span> <span>Digital ID Card</span>
+      </button>
+      <button type="button" class="dropdown-menu-item" id="menuDropSync">
+        <span>🔄</span> <span>Database Sync Status</span>
+      </button>
+      <button type="button" class="dropdown-menu-item" id="menuDropAi">
+        <span>🤖</span> <span>Campus AI Assistant</span>
+      </button>
+      <div class="dropdown-divider"></div>
+      <button type="button" class="dropdown-menu-item danger-item" id="menuDropSignOut">
+        <span>🚪</span> <span>Sign Out / Switch Portal</span>
+      </button>
+    </div>
+  </header>
+
+  
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main class="app-main" id="appMain">
+
+    <!-- ==========================================================================
+         V4.0 CORE MOBILE APPLICATION PAGES (PICTURE 1 & PICTURE 2 DESIGNS)
+         ========================================================================== -->
+
+        <!-- PAGE 1: HOME DASHBOARD (DYNAMIC ROLE-SPECIFIC VIEWS) -->
+    <section class="app-page" id="page-home">
+      <!-- 1A. STUDENT HOME DASHBOARD -->
+      <div id="homeRoleStudent" class="role-home-container" style="display:none;">
+        <div class="home-header-greeting">
+          <h2>Hello, <span class="role-greeting-name">Student</span> 👋</h2>
+          <p class="role-greeting-sub">Computer Science &amp; Engineering • Section A</p>
+        </div>
+
+        <div class="home-hero-card" id="heroTodaysClassesCard" style="cursor:pointer;">
+          <div class="home-hero-content">
+            <span class="home-hero-badge">Academic Schedule</span>
+            <div class="home-hero-title">Today's Classes</div>
+            <div class="home-hero-sub">3 Scheduled Lectures • Tap to View Timetable &rarr;</div>
+          </div>
+          <div class="home-hero-art">🏛️</div>
+        </div>
+
+        <div class="section-headline">
+          <span>Student Quick Actions</span>
+          <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; cursor:pointer;" class="btn-goto-services">All Services &rarr;</span>
+        </div>
+
+        <div class="quick-actions-grid">
+          <div class="quick-action-card" id="stuQaAttendance">
+            <div class="quick-icon-badge bg-purple">📊</div>
+            <span class="quick-action-label">Attendance</span>
+          </div>
+          <div class="quick-action-card" id="stuQaTimetable">
+            <div class="quick-icon-badge bg-indigo">📅</div>
+            <span class="quick-action-label">Timetable</span>
+          </div>
+          <div class="quick-action-card" id="stuQaAssignments">
+            <div class="quick-icon-badge bg-rose">📝</div>
+            <span class="quick-action-label">Assignments</span>
+          </div>
+          <div class="quick-action-card" id="stuQaLibrary">
+            <div class="quick-icon-badge bg-sky">📚</div>
+            <span class="quick-action-label">Library</span>
+          </div>
+          <div class="quick-action-card" id="stuQaTransport">
+            <div class="quick-icon-badge bg-cyan">🚌</div>
+            <span class="quick-action-label">Transport</span>
+          </div>
+          <div class="quick-action-card" id="stuQaDigitalId">
+            <div class="quick-icon-badge bg-violet">🪪</div>
+            <span class="quick-action-label">Digital ID</span>
+          </div>
+          <div class="quick-action-card" id="stuQaGatePass">
+            <div class="quick-icon-badge bg-amber">🎫</div>
+            <span class="quick-action-label">Gate Pass</span>
+          </div>
+          <div class="quick-action-card" id="stuQaLeavePass">
+            <div class="quick-icon-badge bg-emerald">🧳</div>
+            <span class="quick-action-label">Leave Pass</span>
+          </div>
+          <div class="quick-action-card" id="stuQaCertificates">
+            <div class="quick-icon-badge bg-indigo">📜</div>
+            <span class="quick-action-label">Certificates</span>
+          </div>
+          <div class="quick-action-card" id="stuQaFees">
+            <div class="quick-icon-badge bg-purple">💳</div>
+            <span class="quick-action-label">Fee Payment</span>
+          </div>
+          <div class="quick-action-card" id="stuQaReceipt">
+            <div class="quick-icon-badge bg-emerald">🧾</div>
+            <span class="quick-action-label">Fee Receipt</span>
+          </div>
+          <div class="quick-action-card" id="stuQaFeedback">
+            <div class="quick-icon-badge bg-rose">💬</div>
+            <span class="quick-action-label">Feedback</span>
+          </div>
+          <div class="quick-action-card" id="stuQaComplaint">
+            <div class="quick-icon-badge bg-amber">⚖️</div>
+            <span class="quick-action-label">Complaints</span>
+          </div>
+          <div class="quick-action-card" id="stuQaAi">
+            <div class="quick-icon-badge bg-cyan">🤖</div>
+            <span class="quick-action-label">AI Assistant</span>
+          </div>
+        </div>
+
+        <div class="section-headline" style="margin-top:20px;">
+          <span>Recent Academic Circulars</span>
+          <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; cursor:pointer;" id="btnStuViewAllNotices">View All &rarr;</span>
+        </div>
+        <div id="stuHomeNoticesContainer"></div>
+      </div>
+
+      <!-- 1B. FACULTY HOME DASHBOARD -->
+      <div id="homeRoleFaculty" class="role-home-container" style="display:none;">
+        <div class="home-header-greeting">
+          <h2>Hello, Prof. <span class="role-greeting-name">Faculty</span> 👨‍🏫</h2>
+          <p class="role-greeting-sub">Academic Faculty • Department of CSE</p>
+        </div>
+
+        <div class="home-hero-card" id="heroFacultyScheduleCard" style="cursor:pointer; background:linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
+          <div class="home-hero-content">
+            <span class="home-hero-badge" style="background:rgba(99,102,241,0.25); color:#a5b4fc;">Teaching Roster Today</span>
+            <div class="home-hero-title">4 Scheduled Lectures</div>
+            <div class="home-hero-sub">CS501 (09:00 AM) • CS503 (11:30 AM) • Tap to View &rarr;</div>
+          </div>
+          <div class="home-hero-art">📚</div>
+        </div>
+
+        <div class="section-headline">
+          <span>Faculty Quick Actions</span>
+          <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; cursor:pointer;" class="btn-goto-services">All Services &rarr;</span>
+        </div>
+
+        <div class="quick-actions-grid">
+          <div class="quick-action-card" id="facQaAttendance">
+            <div class="quick-icon-badge bg-purple">📝</div>
+            <span class="quick-action-label">Take Attendance</span>
+          </div>
+          <div class="quick-action-card" id="facQaTimetable">
+            <div class="quick-icon-badge bg-indigo">📅</div>
+            <span class="quick-action-label">My Routine</span>
+          </div>
+          <div class="quick-action-card" id="facQaUploadAssignment">
+            <div class="quick-icon-badge bg-rose">📤</div>
+            <span class="quick-action-label">Upload Assignment</span>
+          </div>
+          <div class="quick-action-card" id="facQaIssueCert">
+            <div class="quick-icon-badge bg-indigo">📜</div>
+            <span class="quick-action-label">Issue Certificate</span>
+          </div>
+          <div class="quick-action-card" id="facQaPostNotice">
+            <div class="quick-icon-badge bg-amber">📢</div>
+            <span class="quick-action-label">Post Notice</span>
+          </div>
+          <div class="quick-action-card" id="facQaLibrary">
+            <div class="quick-icon-badge bg-sky">📚</div>
+            <span class="quick-action-label">Smart Library</span>
+          </div>
+          <div class="quick-action-card" id="facQaTransport">
+            <div class="quick-icon-badge bg-cyan">🚌</div>
+            <span class="quick-action-label">Transport</span>
+          </div>
+          <div class="quick-action-card" id="facQaDigitalId">
+            <div class="quick-icon-badge bg-violet">🪪</div>
+            <span class="quick-action-label">Digital ID</span>
+          </div>
+          <div class="quick-action-card" id="facQaAi">
+            <div class="quick-icon-badge bg-cyan">🤖</div>
+            <span class="quick-action-label">AI Assistant</span>
+          </div>
+        </div>
+
+        <div class="section-headline" style="margin-top:20px;">
+          <span>Department Notices</span>
+        </div>
+        <div id="facHomeNoticesContainer"></div>
+      </div>
+
+      <!-- 1C. HOSTEL MANAGEMENT HOME DASHBOARD -->
+      <div id="homeRoleHostel" class="role-home-container" style="display:none;">
+        <div class="home-header-greeting">
+          <h2>Hello, <span class="role-greeting-name">Superintendent</span> 🏢</h2>
+          <p class="role-greeting-sub">Hostel Administration &amp; Resident Welfare</p>
+        </div>
+
+        <div class="home-hero-card" id="heroHostelOverviewCard" style="cursor:pointer; background:linear-gradient(135deg, #064e3b 0%, #065f46 100%);">
+          <div class="home-hero-content">
+            <span class="home-hero-badge" style="background:rgba(16,185,129,0.25); color:#6ee7b7;">Resident Movement</span>
+            <div class="home-hero-title">Hostel Pass Desk</div>
+            <div class="home-hero-sub"><span id="hostelPendingCountBadge">2 Passes Pending Review</span> • Tap to Manage &rarr;</div>
+          </div>
+          <div class="home-hero-art">🧳</div>
+        </div>
+
+        <div class="section-headline">
+          <span>Hostel Quick Actions</span>
+          <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; cursor:pointer;" class="btn-goto-services">All Services &rarr;</span>
+        </div>
+
+        <div class="quick-actions-grid">
+          <div class="quick-action-card" id="hostelQaGatePasses">
+            <div class="quick-icon-badge bg-amber">🎫</div>
+            <span class="quick-action-label">Day Passes</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaLeavePasses">
+            <div class="quick-icon-badge bg-emerald">🧳</div>
+            <span class="quick-action-label">Leave Passes</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaNightRollCall">
+            <div class="quick-icon-badge bg-purple">📋</div>
+            <span class="quick-action-label">Night Attendance</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaComplaints">
+            <div class="quick-icon-badge bg-rose">⚖️</div>
+            <span class="quick-action-label">Complaints</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaPostNotice">
+            <div class="quick-icon-badge bg-indigo">📢</div>
+            <span class="quick-action-label">Hostel Notice</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaDigitalId">
+            <div class="quick-icon-badge bg-violet">🪪</div>
+            <span class="quick-action-label">Digital ID</span>
+          </div>
+          <div class="quick-action-card" id="hostelQaAi">
+            <div class="quick-icon-badge bg-cyan">🤖</div>
+            <span class="quick-action-label">AI Assistant</span>
+          </div>
+        </div>
+
+        <div class="section-headline" style="margin-top:20px;">
+          <span>Hostel Alerts &amp; Circulars</span>
+        </div>
+        <div id="hostelHomeNoticesContainer"></div>
+      </div>
+
+      <!-- 1D. ADMIN HOME DASHBOARD -->
+      <div id="homeRoleAdmin" class="role-home-container" style="display:none;">
+        <div class="home-header-greeting">
+          <h2>Hello, <span class="role-greeting-name">Administrator</span> 🏛️</h2>
+          <p class="role-greeting-sub">Central Campus Administration • Master Authority</p>
+        </div>
+
+        <!-- Campus Metrics Stat Banner -->
+        <div class="admin-metrics-banner" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:18px;">
+          <div class="admin-stat-card" style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px; text-align:center;">
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">Students</div>
+            <div style="font-size:1.35rem; font-weight:800; color:#38bdf8; margin:4px 0;" id="adminStatStudentsCount">2,450</div>
+            <div style="font-size:0.68rem; color:#34d399;">Active Enrolled</div>
+          </div>
+          <div class="admin-stat-card" style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px; text-align:center;">
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">Faculty</div>
+            <div style="font-size:1.35rem; font-weight:800; color:#a78bfa; margin:4px 0;" id="adminStatFacultyCount">128</div>
+            <div style="font-size:0.68rem; color:#34d399;">Teaching Staff</div>
+          </div>
+          <div class="admin-stat-card" style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px; text-align:center;">
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:600;">Hostel Staff</div>
+            <div style="font-size:1.35rem; font-weight:800; color:#fbbf24; margin:4px 0;" id="adminStatHostelCount">24</div>
+            <div style="font-size:0.68rem; color:#34d399;">Wardens &amp; Ops</div>
+          </div>
+        </div>
+
+        <div class="section-headline">
+          <span>Administration Controls</span>
+          <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; cursor:pointer;" class="btn-goto-services">All Services &rarr;</span>
+        </div>
+
+        <div class="quick-actions-grid">
+          <div class="quick-action-card" id="adminQaDirectory">
+            <div class="quick-icon-badge bg-indigo">👥</div>
+            <span class="quick-action-label">User Directory</span>
+          </div>
+          <div class="quick-action-card" id="adminQaAttendance">
+            <div class="quick-icon-badge bg-purple">📊</div>
+            <span class="quick-action-label">Track Attendance</span>
+          </div>
+          <div class="quick-action-card" id="adminQaFeedback">
+            <div class="quick-icon-badge bg-rose">💬</div>
+            <span class="quick-action-label">Student Feedback</span>
+          </div>
+          <div class="quick-action-card" id="adminQaCustomizer">
+            <div class="quick-icon-badge bg-cyan">⚙️</div>
+            <span class="quick-action-label">Customize Services</span>
+          </div>
+          <div class="quick-action-card" id="adminQaBanking">
+            <div class="quick-icon-badge bg-emerald">💳</div>
+            <span class="quick-action-label">Bank &amp; UPI QR</span>
+          </div>
+          <div class="quick-action-card" id="adminQaTopScorers">
+            <div class="quick-icon-badge bg-amber">🏆</div>
+            <span class="quick-action-label">Top Scorers</span>
+          </div>
+          <div class="quick-action-card" id="adminQaComplaints">
+            <div class="quick-icon-badge bg-rose">⚖️</div>
+            <span class="quick-action-label">Complaints</span>
+          </div>
+          <div class="quick-action-card" id="adminQaTransport">
+            <div class="quick-icon-badge bg-cyan">🚌</div>
+            <span class="quick-action-label">Transport</span>
+          </div>
+          <div class="quick-action-card" id="adminQaPostNotice">
+            <div class="quick-icon-badge bg-purple">📢</div>
+            <span class="quick-action-label">Broadcast Notice</span>
+          </div>
+          <div class="quick-action-card" id="adminQaAi">
+            <div class="quick-icon-badge bg-sky">🤖</div>
+            <span class="quick-action-label">AI Assistant</span>
+          </div>
+        </div>
+
+        <div class="section-headline" style="margin-top:20px;">
+          <span>Institutional Summary</span>
+        </div>
+        <div id="adminHomeSummaryContainer">
+          <div style="background:#131c31; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:700; color:#fff;" id="adminInstNameHeader">GEC Bhubaneswar</span>
+              <span style="background:rgba(16,185,129,0.2); color:#34d399; font-size:0.7rem; font-weight:800; padding:2px 8px; border-radius:10px;">ID: <span id="adminInstIdHeader">GEC-2026</span></span>
+            </div>
+            <p style="font-size:0.75rem; color:#94a3b8; margin:0;">All institutional sub-systems operational with end-to-end multi-tenant isolation and cloud sync.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+        <!-- PAGE 2: CAMPUS SERVICES SCREEN (DYNAMIC ROLE-SPECIFIC VIEWS) -->
+    <section class="app-page" id="page-services">
+      <div style="margin-bottom:14px;">
+        <h2 style="font-size:1.25rem; font-weight:800; color:#fff;" id="servicesPageHeading">Campus Services</h2>
+        <p style="font-size:0.78rem; color:#94a3b8;" id="servicesPageSub">Services personalized for your institutional role.</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="services-search-bar">
+        <span class="services-search-icon">🔍</span>
+        <input type="text" class="services-search-input" id="servicesSearchInput" placeholder="Search available services..." autocomplete="off">
+      </div>
+
+      <!-- 2A. STUDENT SERVICES VIEW -->
+      <div id="servicesRoleStudent" class="role-services-container" style="display:none;">
+        <!-- Category 1: Academic -->
+        <div class="services-category-box" data-cat="academic">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#a78bfa;">🎓</span> Academic Services</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">5 services</span>
+          </div>
+          <div class="services-item-row" id="srvStuAttendance">
+            <div class="service-item-label"><span>📊</span> Attendance Tracking (Class &amp; Hostel)</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuTimetable">
+            <div class="service-item-label"><span>📅</span> Class Timetable &amp; Routine</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuAssignments">
+            <div class="service-item-label"><span>📝</span> Smart Assignments &amp; Homework</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuLibrary">
+            <div class="service-item-label"><span>📚</span> Smart Library &amp; Book Search</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuNotices">
+            <div class="service-item-label"><span>📢</span> Academic Notices &amp; Circulars</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 2: Student Logistics & ID -->
+        <div class="services-category-box" data-cat="logistics">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#38bdf8;">👤</span> Student Logistics &amp; ID</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">5 services</span>
+          </div>
+          <div class="services-item-row" id="srvStuDigitalId">
+            <div class="service-item-label"><span>🪪</span> Digital Campus ID Card</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuTransport">
+            <div class="service-item-label"><span>🚌</span> Campus Transportation &amp; Bus Pass</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuGatePass">
+            <div class="service-item-label"><span>🎫</span> Request Day Gate Pass</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuLeavePass">
+            <div class="service-item-label"><span>🧳</span> Request Hostel Leave Pass</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuCertificates">
+            <div class="service-item-label"><span>📜</span> Download Official Certificates</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 3: Fee Payment & Receipt -->
+        <div class="services-category-box" data-cat="fees">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#10b981;">💳</span> College Fee Payment &amp; Receipts</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">2 services</span>
+          </div>
+          <div class="services-item-row" id="srvStuFeesPay">
+            <div class="service-item-label"><span>💳</span> Pay College Fees Online (Bank, UPI &amp; QR)</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuFeeReceipt">
+            <div class="service-item-label"><span>🧾</span> Generate Official Fee Payment Receipt</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 4: Complaints & Confidential Feedback -->
+        <div class="services-category-box" data-cat="grievance">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#f43f5e;">⚖️</span> Complaints &amp; Confidential Feedback</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">2 services</span>
+          </div>
+          <div class="services-item-row" id="srvStuComplaints">
+            <div class="service-item-label"><span>⚖️</span> Hostel &amp; Canteen Complaints</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvStuFeedback">
+            <div class="service-item-label"><span>💬</span> Confidential Student Feedback (Faculty, Hostel, Canteen)</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 5: Dynamic Custom Services Added by Admin -->
+        <div class="services-category-box" id="catStuCustomServicesBox" style="display:none;">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#ec4899;">✨</span> Institution Custom Services</div>
+            <span style="font-size:0.72rem; color:#94a3b8;" id="catStuCustomCountBadge">Custom</span>
+          </div>
+          <div id="stuCustomServicesList"></div>
+        </div>
+      </div>
+
+      <!-- 2B. FACULTY SERVICES VIEW -->
+      <div id="servicesRoleFaculty" class="role-services-container" style="display:none;">
+        <!-- Category 1: Classroom & Teaching Management -->
+        <div class="services-category-box" data-cat="academic">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#a78bfa;">👨‍🏫</span> Teaching &amp; Classroom Management</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">4 services</span>
+          </div>
+          <div class="services-item-row" id="srvFacAttendance">
+            <div class="service-item-label"><span>📝</span> Take Student Attendance (Register)</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacTimetable">
+            <div class="service-item-label"><span>📅</span> Faculty Teaching Routine &amp; Schedule</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacUploadAssignment">
+            <div class="service-item-label"><span>📤</span> Upload Assignments for Students</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacIssueCertificate">
+            <div class="service-item-label"><span>📜</span> Upload &amp; Issue Student Certificates</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 2: Resources & Notices -->
+        <div class="services-category-box" data-cat="resources">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#38bdf8;">📢</span> Faculty Resources &amp; Notices</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">4 services</span>
+          </div>
+          <div class="services-item-row" id="srvFacPostNotice">
+            <div class="service-item-label"><span>📢</span> Post Departmental Notice &amp; Circular</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacLibrary">
+            <div class="service-item-label"><span>📚</span> Smart Library &amp; Academic Reference</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacTransport">
+            <div class="service-item-label"><span>🚌</span> Campus Transportation Routes</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvFacDigitalId">
+            <div class="service-item-label"><span>🪪</span> Digital Faculty ID Card</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 3: Dynamic Custom Services Added by Admin -->
+        <div class="services-category-box" id="catFacCustomServicesBox" style="display:none;">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#ec4899;">✨</span> Institution Custom Services</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">Custom</span>
+          </div>
+          <div id="facCustomServicesList"></div>
+        </div>
+      </div>
+
+      <!-- 2C. HOSTEL MANAGEMENT SERVICES VIEW -->
+      <div id="servicesRoleHostel" class="role-services-container" style="display:none;">
+        <!-- Category 1: Resident Movement & Pass Approvals -->
+        <div class="services-category-box" data-cat="approvals">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#10b981;">🎫</span> Resident Movement &amp; Approvals</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">2 services</span>
+          </div>
+          <div class="services-item-row" id="srvHostelGatePasses">
+            <div class="service-item-label"><span>🎫</span> Review &amp; Approve Day Gate Passes</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvHostelLeavePasses">
+            <div class="service-item-label"><span>🧳</span> Review &amp; Approve Hostel Leave Passes</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 2: Hostel Operations & Grievances -->
+        <div class="services-category-box" data-cat="operations">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#f59e0b;">🏢</span> Hostel Operations &amp; Grievances</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">4 services</span>
+          </div>
+          <div class="services-item-row" id="srvHostelNightRollCall">
+            <div class="service-item-label"><span>📋</span> Hostel Student Night Attendance</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvHostelComplaints">
+            <div class="service-item-label"><span>⚖️</span> Hostel &amp; Canteen Complaints Desk</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvHostelPostNotice">
+            <div class="service-item-label"><span>📢</span> Post Hostel Notice &amp; Announcements</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvHostelDigitalId">
+            <div class="service-item-label"><span>🪪</span> Digital Staff ID Card</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 3: Dynamic Custom Services Added by Admin -->
+        <div class="services-category-box" id="catHostelCustomServicesBox" style="display:none;">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#ec4899;">✨</span> Institution Custom Services</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">Custom</span>
+          </div>
+          <div id="hostelCustomServicesList"></div>
+        </div>
+      </div>
+
+      <!-- 2D. ADMIN SERVICES VIEW -->
+      <div id="servicesRoleAdmin" class="role-services-container" style="display:none;">
+        <!-- Category 1: Directory & User Management -->
+        <div class="services-category-box" data-cat="directory">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#6366f1;">👥</span> User Directories &amp; Records</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">3 services</span>
+          </div>
+          <div class="services-item-row" id="srvAdminStudents">
+            <div class="service-item-label"><span>🎓</span> Registered Students Directory</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminFaculties">
+            <div class="service-item-label"><span>👨‍🏫</span> Registered Faculty Directory</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminHostelStaff">
+            <div class="service-item-label"><span>🏢</span> Registered Hostel Management Staff</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 2: Academic & Attendance Monitoring -->
+        <div class="services-category-box" data-cat="academics">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#a78bfa;">📊</span> Monitoring &amp; Academics</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">4 services</span>
+          </div>
+          <div class="services-item-row" id="srvAdminAttendance">
+            <div class="service-item-label"><span>📊</span> Live Institutional Attendance Tracking</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminTimetables">
+            <div class="service-item-label"><span>📅</span> Class Timetable &amp; Master Routines</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminLibrary">
+            <div class="service-item-label"><span>📚</span> Smart Library Overview &amp; Inventory</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminTopScorers">
+            <div class="service-item-label"><span>🏆</span> Top Scorer Student Results &amp; Rankings</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 3: Governance, Transport & Media -->
+        <div class="services-category-box" data-cat="governance">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#0ea5e9;">🏛️</span> Governance, Transport &amp; Media</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">5 services</span>
+          </div>
+          <div class="services-item-row" id="srvAdminDigitalId">
+            <div class="service-item-label"><span>🪪</span> Digital Campus ID System</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminNotices">
+            <div class="service-item-label"><span>📢</span> Official Notices &amp; Broadcast Announcements</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminTransport">
+            <div class="service-item-label"><span>🚌</span> Campus Transportation &amp; Fleet Management</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminComplaints">
+            <div class="service-item-label"><span>⚖️</span> Complaints Manager (Student, Faculty, Hostel)</div>
+            <span style="color:#64748b;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminFeedbackView" style="background:rgba(244,63,94,0.06); border-left:3px solid #f43f5e;">
+            <div class="service-item-label"><span style="color:#f43f5e;">💬</span> <strong>Confidential Student Feedback Desk</strong> (Admin Only)</div>
+            <span style="color:#f43f5e;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 4: Customization & Banking Gateway -->
+        <div class="services-category-box" data-cat="customization">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#10b981;">⚙️</span> Platform Customization &amp; Banking</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">2 services</span>
+          </div>
+          <div class="services-item-row" id="srvAdminServiceCustomizer" style="background:rgba(16,185,129,0.06); border-left:3px solid #10b981;">
+            <div class="service-item-label"><span style="color:#10b981;">➕</span> <strong>Service Customizer</strong> (Add/Remove Services for Roles)</div>
+            <span style="color:#10b981;">&rsaquo;</span>
+          </div>
+          <div class="services-item-row" id="srvAdminBankConfig" style="background:rgba(59,130,246,0.06); border-left:3px solid #3b82f6;">
+            <div class="service-item-label"><span style="color:#3b82f6;">💳</span> <strong>Institution Bank Details &amp; Fee QR Scanner</strong></div>
+            <span style="color:#3b82f6;">&rsaquo;</span>
+          </div>
+        </div>
+
+        <!-- Category 5: Dynamic Custom Services Added by Admin -->
+        <div class="services-category-box" id="catAdminCustomServicesBox" style="display:none;">
+          <div class="services-category-header">
+            <div class="services-cat-title"><span style="color:#ec4899;">✨</span> Custom Admin Extensions</div>
+            <span style="font-size:0.72rem; color:#94a3b8;">Custom</span>
+          </div>
+          <div id="adminCustomServicesList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: REQUEST CENTER ("MY REQUESTS" - PICTURE 1) -->
+    <section class="app-page" id="page-requests">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#fff;">My Requests</h2>
+          <p style="font-size:0.78rem; color:#94a3b8;">Track real-time status of all your applications.</p>
+        </div>
+        <button type="button" class="btn-primary" id="btnOpenNewRequestModal" style="padding:8px 14px; font-size:0.78rem; border-radius:12px;">
+          <span>+</span> New Request
+        </button>
+      </div>
+
+      <!-- Filter Pills (All, Pending, Approved, Rejected) -->
+      <div class="requests-filter-pills" id="requestsFilterPills">
+        <button type="button" class="filter-pill active" data-filter="ALL">All</button>
+        <button type="button" class="filter-pill" data-filter="PENDING">Pending</button>
+        <button type="button" class="filter-pill" data-filter="APPROVED">Approved</button>
+        <button type="button" class="filter-pill" data-filter="REJECTED">Rejected</button>
+      </div>
+
+      <!-- Request Cards Container -->
+      <div id="requestsListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- PAGE 4: MORE / PROFILE SCREEN (PICTURE 1) -->
+    <section class="app-page" id="page-more">
+      <!-- Profile Header Card -->
+      <div class="profile-overview-card" id="cardMoreProfileHeader">
+        <div class="profile-avatar-circle" id="moreProfileAvatar">👨‍🎓</div>
+        <div class="profile-overview-info">
+          <div class="profile-overview-name" id="moreProfileName">Ashish Kumar Sahoo</div>
+          <span class="profile-overview-role" id="moreProfileRole">Student</span>
+          <div class="profile-overview-id" id="moreProfileId">ID: CS-2024-082 • GEC-2026</div>
+        </div>
+        <span style="font-size:1.2rem; color:#a78bfa;">&rsaquo;</span>
+      </div>
+
+      <!-- Settings & Links Menu -->
+      <div class="menu-group-card">
+        <div class="menu-group-item" id="menuItemDigitalId">
+          <div class="menu-item-left">
+            <span class="menu-item-icon">🪪</span>
+            <span>Digital Campus ID Card</span>
+          </div>
+          <span style="color:#64748b;">&rsaquo;</span>
+        </div>
+        <div class="menu-group-item" id="menuItemNotifications">
+          <div class="menu-item-left">
+            <span class="menu-item-icon">🔔</span>
+            <span>Notifications</span>
+          </div>
+          <span class="menu-badge-pill" id="moreNotifCount">3</span>
+        </div>
+        <div class="menu-group-item" id="menuItemLanguage">
+          <div class="menu-item-left">
+            <span class="menu-item-icon">🌐</span>
+            <span>Language</span>
+          </div>
+          <span style="font-size:0.78rem; color:#a5b4fc;" id="moreCurrentLangLabel">English &rsaquo;</span>
+        </div>
+      </div>
+
+      <div class="menu-group-card">
+        <div class="menu-group-item" id="menuItemHelp" onclick="window.openHelpSupportModal()" style="cursor:pointer;">
+          <div class="menu-item-left">
+            <span class="menu-item-icon">❓</span>
+            <span>Help &amp; Support</span>
+          </div>
+          <span style="color:#64748b;">&rsaquo;</span>
+        </div>
+        <div class="menu-group-item" id="menuItemAbout" onclick="window.openAboutSmartCampusModal()" style="cursor:pointer;">
+          <div class="menu-item-left">
+            <span class="menu-item-icon">ℹ️</span>
+            <span>About Smart Campus</span>
+          </div>
+          <span style="font-size:0.74rem; color:#64748b;">v4.0 &rsaquo;</span>
+        </div>
+      </div>
+
+      <!-- Switch Role Section -->
+      <div class="card-box" style="margin-bottom:16px;">
+        <div class="card-title"><span>👤</span> Manage Profile Photo</div>
+        <p class="card-subtitle">Upload your picture to customize your campus profile avatar.</p>
+        <button type="button" class="btn-change-photo" id="btnMoreChangePhoto" style="width:100%; justify-content:center; padding:12px; font-size:0.85rem;">
+          <span>📷</span> <span>Change / Upload Photo</span>
+        </button>
+      </div>
+
+      <!-- Sign Out Button -->
+      <button type="button" class="btn-secondary" id="btnMoreSignOut" style="width:100%; padding:14px; color:#f87171; border-color:rgba(239,68,68,0.3); font-weight:700;">
+        <span>🚪</span> Sign Out of Account
+      </button>
+    </section>
+
+    <!-- ==========================================================================
+         NEW FEATURES: TRANSPORT, LIBRARY, ASSIGNMENTS, DIGITAL ID CARD
+         ========================================================================== -->
+
+    <!-- NEW FEATURE 1: TRANSPORTATION SYSTEM -->
+    <section class="app-page" id="page-transport">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+        <div>
+          <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Campus Transportation</h2>
+          <p style="font-size:0.75rem; color:#94a3b8;">Live fleet tracking, bus schedules, and digital passes.</p>
+        </div>
+      </div>
+
+      <!-- Transport Tabs -->
+      <div class="requests-filter-pills">
+        <button type="button" class="filter-pill active" id="tabTransportRoutes">Live Bus Routes</button>
+        <button type="button" class="filter-pill" id="tabTransportPass">My Digital Bus Pass</button>
+      </div>
+
+      <!-- Bus Routes Container -->
+      <div id="transportRoutesContainer">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Digital Bus Pass View (Hidden by default) -->
+      <div id="transportPassContainer" style="display:none;">
+        <div class="card-box" style="background:linear-gradient(135deg, #0369a1 0%, #1e293b 100%); border-color:rgba(14,165,233,0.3);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:0.74rem; font-weight:800; text-transform:uppercase; color:#7dd3fc;">SMART CAMPUS BUS PASS</span>
+            <span class="approval-badge badge-approved">ACTIVE 2026</span>
+          </div>
+          <h3 style="color:#fff; font-size:1.15rem; margin-bottom:2px;" id="busPassHolderName">Ashish Kumar Sahoo</h3>
+          <p style="font-size:0.78rem; color:#bae6fd; margin-bottom:12px;" id="busPassHolderSub">Roll: CS-2024-082 • CSE Dept</p>
+          <div style="font-size:0.8rem; line-height:1.7; color:#e0f2fe;">
+            <div>Assigned Route: <strong style="color:#fff;" id="busPassRouteName">Route 1: Cuttack Link Express</strong></div>
+            <div>Bus Registration: <strong style="color:#fff;">OD-05-AB-1204</strong></div>
+            <div>Valid Till: <strong style="color:#7dd3fc;">30 June 2027</strong></div>
+          </div>
+          <div style="margin-top:16px; background:#fff; border-radius:12px; padding:12px; display:flex; flex-direction:column; align-items:center;">
+            <div id="busPassQrCode"></div>
+            <span style="font-size:0.68rem; color:#0f172a; font-weight:800; margin-top:6px;">SCANNABLE CONDUCTOR VERIFICATION PASS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW FEATURE 2: SMART LIBRARY SYSTEM -->
+    <section class="app-page" id="page-library">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+        <div>
+          <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Smart Campus Library</h2>
+          <p style="font-size:0.75rem; color:#94a3b8;">Search digital catalog, borrow books, and track due dates.</p>
+        </div>
+      </div>
+
+      <!-- Library Tabs -->
+      <div class="requests-filter-pills">
+        <button type="button" class="filter-pill active" id="tabLibraryCatalog">Catalog Search</button>
+        <button type="button" class="filter-pill" id="tabLibraryBorrowed">My Borrowed Books</button>
+      </div>
+
+      <!-- Catalog Search View -->
+      <div id="libraryCatalogView">
+        <div class="services-search-bar">
+          <span class="services-search-icon">🔍</span>
+          <input type="text" class="services-search-input" id="librarySearchInput" placeholder="Search books by title, author, or ISBN..." autocomplete="off">
+        </div>
+        <div id="libraryBooksContainer">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- My Borrowed Books View (Hidden by default) -->
+      <div id="libraryBorrowedView" style="display:none;">
+        <div id="libraryBorrowedContainer">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW FEATURE 3: SMART ASSIGNMENT SYSTEM -->
+    <section class="app-page" id="page-assignments">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+          <div>
+            <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Smart Assignments</h2>
+            <p style="font-size:0.75rem; color:#94a3b8;">Homework, project submissions, and grades.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-primary" id="btnFacultyCreateAssignment" style="display:none; padding:8px 12px; font-size:0.75rem;">
+          <span>+</span> Create Assignment
+        </button>
+      </div>
+
+      <!-- Assignment Filter Pills -->
+      <div class="requests-filter-pills" id="assignmentFilterPills">
+        <button type="button" class="filter-pill active" data-asgfilter="ALL">All</button>
+        <button type="button" class="filter-pill" data-asgfilter="PENDING">Pending</button>
+        <button type="button" class="filter-pill" data-asgfilter="SUBMITTED">Submitted</button>
+      </div>
+
+      <div id="assignmentsListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- NEW FEATURE 4: DIGITAL ID CARD SYSTEM (3D FLIP) -->
+    <section class="app-page" id="page-digital-id">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+        <div>
+          <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Digital Campus ID Card</h2>
+          <p style="font-size:0.75rem; color:#94a3b8;">Official cryptographic identity card. Tap to flip.</p>
+        </div>
+      </div>
+
+      <!-- 3D Perspective Card Flipper -->
+      <div class="id-card-perspective-container">
+        <div class="id-card-flipper" id="digitalIdCardFlipper" title="Tap to flip card">
+          <!-- CARD FRONT -->
+          <div class="id-card-face id-card-front">
+            <div class="id-card-top-header">
+              <div>
+                <div class="id-card-inst-name" id="idCardInstName">GEC BHUBANESWAR</div>
+                <span style="font-size:0.62rem; color:#93c5fd; text-transform:uppercase; letter-spacing:0.5px;">OFFICIAL IDENTITY CARD</span>
+              </div>
+              <div style="font-size:1.2rem;">🏛️</div>
+            </div>
+
+            <div class="id-card-body-row">
+              <div class="id-card-photo" id="idCardPhotoAvatar">👨‍🎓</div>
+              <div class="id-card-info-col">
+                <h3 id="idCardHolderName">Ashish Kumar Sahoo</h3>
+                <span class="profile-overview-role" id="idCardRoleBadge" style="margin-bottom:2px;">Student</span>
+                <div style="font-size:0.75rem; color:#cbd5e1;" id="idCardRollNumber">Roll: CS-2024-082</div>
+                <div style="font-size:0.7rem; color:#94a3b8;" id="idCardDeptName">Computer Science &amp; Engg</div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
+              <div>
+                <span style="font-size:0.62rem; color:#94a3b8; display:block;">BLOOD GROUP</span>
+                <strong style="font-size:0.78rem; color:#f87171;" id="idCardBloodGroup">O+</strong>
+              </div>
+              <div class="id-card-barcode-wrap" id="idCardBarcodeText">
+                ||| | |||| || ||| ||||
+              </div>
+              <div>
+                <span style="font-size:0.62rem; color:#94a3b8; display:block;">SESSION</span>
+                <strong style="font-size:0.78rem; color:#7dd3fc;">2024-2028</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD BACK -->
+          <div class="id-card-face id-card-back">
+            <div class="id-card-top-header">
+              <span style="font-size:0.72rem; font-weight:800; color:#cbd5e1;">SECURITY &amp; VERIFICATION</span>
+              <span style="font-size:0.65rem; color:#34d399; font-weight:700;">● VERIFIED CHIP</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:16px; margin:10px 0;">
+              <div style="background:#fff; border-radius:10px; padding:6px; flex-shrink:0;">
+                <div id="idCardQrContainer" style="width:72px; height:72px;"></div>
+              </div>
+              <div style="font-size:0.68rem; color:#94a3b8; line-height:1.5;">
+                <div>Emergency: <strong style="color:#fff;" id="idCardEmergencyContact">+91 98765 43210</strong></div>
+                <div>Campus Security: <strong style="color:#fff;">+91 674 2901234</strong></div>
+                <div>Library Pass: <strong style="color:#34d399;">Active &amp; Scannable</strong></div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.62rem; color:#64748b;">Scan QR for Security Gate Clearance</span>
+              <span style="font-size:0.7rem; font-weight:700; color:#c084fc;">Authorized Principal Signature ✍️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-bottom:16px;">
+        <span style="font-size:0.75rem; color:#a78bfa; font-weight:600;">🔄 Tap card above to flip between Front and Back</span>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn-primary" id="btnDownloadIdCard" style="flex:1;"><span>📥</span> Save to Device</button>
+        <button type="button" class="btn-secondary" id="btnFlipIdCard" style="flex:1;"><span>🔄</span> Flip Card</button>
+      </div>
+    </section>
+
+
+    <!-- 0. HOMEPAGE: LOGIN & REGISTRATION PORTAL -->
+        <!-- =========================================================================
+         NEW REDESIGNED 6-SCREEN ENTRY & AUTHENTICATION PORTAL SYSTEM
+         ========================================================================= -->
+
+    <!-- SCREEN 1: NEW ENTRY HOME PAGE (Landing Portal Picker) -->
+    <section class="app-page screen-entry-home active" id="view-auth">
+      <!-- Campus Hero Banner Card with Architectural Vector Illustration -->
+      <div class="entry-hero-banner">
+        <div class="entry-hero-content">
+          <h1>One Campus.<br>One Platform.</h1>
+          <p>Connect • Manage • Grow</p>
+        </div>
+        <div class="entry-hero-illustration">
+          <svg viewBox="0 0 400 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="35" r="30" fill="url(#heroSunGlow)" opacity="0.6"/>
+            <path d="M0 115 Q100 95 200 105 T400 110 L400 135 L0 135 Z" fill="#1e3a8a" opacity="0.5"/>
+            <!-- Symmetrical Green Trees -->
+            <ellipse cx="65" cy="98" rx="28" ry="24" fill="#15803d"/>
+            <ellipse cx="65" cy="94" rx="22" ry="18" fill="#22c55e" opacity="0.85"/>
+            <ellipse cx="38" cy="106" rx="20" ry="16" fill="#166534"/>
+            <ellipse cx="88" cy="106" rx="16" ry="14" fill="#15803d"/>
+            <ellipse cx="335" cy="98" rx="28" ry="24" fill="#15803d"/>
+            <ellipse cx="335" cy="94" rx="22" ry="18" fill="#22c55e" opacity="0.85"/>
+            <ellipse cx="362" cy="106" rx="20" ry="16" fill="#166534"/>
+            <ellipse cx="312" cy="106" rx="16" ry="14" fill="#15803d"/>
+            <!-- Left Wing -->
+            <rect x="90" y="70" width="75" height="45" rx="3" fill="#f1f5f9"/>
+            <rect x="90" y="66" width="75" height="5" fill="#e2e8f0"/>
+            <rect x="98" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="112" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="126" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="140" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="98" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="112" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="126" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="140" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <!-- Right Wing -->
+            <rect x="235" y="70" width="75" height="45" rx="3" fill="#f1f5f9"/>
+            <rect x="235" y="66" width="75" height="5" fill="#e2e8f0"/>
+            <rect x="243" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="257" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="271" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="285" y="74" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="243" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="257" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="271" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <rect x="285" y="92" width="8" height="12" rx="2" fill="#93c5fd"/>
+            <!-- Central Portico & Dome -->
+            <rect x="160" y="55" width="80" height="60" rx="3" fill="#ffffff"/>
+            <polygon points="160,55 200,32 240,55" fill="#e2e8f0"/>
+            <circle cx="200" cy="46" r="6.5" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+            <line x1="200" y1="46" x2="200" y2="42" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="200" y1="46" x2="203" y2="46" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M188 32 C188 20 212 20 212 32 Z" fill="#60a5fa"/>
+            <rect x="198" y="14" width="4" height="6" fill="#3b82f6"/>
+            <circle cx="200" cy="13" r="2.5" fill="#f59e0b"/>
+            <!-- Classical Columns -->
+            <rect x="168" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <rect x="180" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <rect x="192" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <rect x="203" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <rect x="215" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <rect x="227" y="60" width="5" height="42" rx="1" fill="#cbd5e1"/>
+            <path d="M192 115 L192 85 C192 80 208 80 208 85 L208 115 Z" fill="#1e293b"/>
+            <rect x="160" y="102" width="80" height="3" fill="#94a3b8"/>
+            <rect x="156" y="112" width="88" height="3" fill="#cbd5e1"/>
+            <rect x="152" y="115" width="96" height="3" fill="#e2e8f0"/>
+            <path d="M0 120 Q100 115 152 118 L248 118 Q300 115 400 120 L400 135 L0 135 Z" fill="#16a34a"/>
+            <polygon points="175,118 225,118 250,135 150,135" fill="#f8fafc"/>
+            <defs>
+              <radialGradient id="heroSunGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fef08a" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 5 Action Portal Cards (Row 1: 3 cards, Row 2: 2 cards) -->
+      <div class="entry-portals-grid">
+        <!-- 1. Institution Register -->
+        <div class="entry-portal-card card-inst" id="cardNavInstReg">
+          <div class="entry-card-icon-box">🏛️</div>
+          <div class="entry-card-title">Institution<br>Register</div>
+          <div class="entry-card-arrow">→</div>
+        </div>
+
+        <!-- 2. Admin Portal -->
+        <div class="entry-portal-card card-admin" id="cardNavAdminPortal">
+          <div class="entry-card-icon-box">👤⚙️</div>
+          <div class="entry-card-title">Admin<br>Portal</div>
+          <div class="entry-card-arrow">→</div>
+        </div>
+
+        <!-- 3. Student Portal -->
+        <div class="entry-portal-card card-student" id="cardNavStudentPortal">
+          <div class="entry-card-icon-box">🎓</div>
+          <div class="entry-card-title">Student<br>Portal</div>
+          <div class="entry-card-arrow">→</div>
+        </div>
+      </div>
+
+      <div class="entry-portals-grid-row2">
+        <!-- 4. Faculty Portal -->
+        <div class="entry-portal-card card-faculty" id="cardNavFacultyPortal">
+          <div class="entry-card-icon-box">👥</div>
+          <div class="entry-card-title">Faculty<br>Portal</div>
+          <div class="entry-card-arrow">→</div>
+        </div>
+
+        <!-- 5. Hostel Management -->
+        <div class="entry-portal-card card-hostel" id="cardNavHostelPortal">
+          <div class="entry-card-icon-box">🏠</div>
+          <div class="entry-card-title">Hostel<br>Management</div>
+          <div class="entry-card-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Footer Tagline & Wave Decor -->
+      <div class="entry-footer-tagline">
+        <span class="dot">✦</span>
+        <span>Your Campus, Our Priority</span>
+        <span class="dot">✦</span>
+      </div>
+
+      <svg class="entry-bottom-wave" viewBox="0 0 500 60" preserveAspectRatio="none">
+        <path d="M0,20 C150,55 350,-15 500,25 L500,60 L0,60 Z" fill="#e0e7ff" opacity="0.6"/>
+        <path d="M0,35 C200,60 300,10 500,40 L500,60 L0,60 Z" fill="#ede9fe" opacity="0.8"/>
+      </svg>
+    </section>
+
+    <!-- SCREEN 2: INSTITUTION REGISTRATION (Picture 2) -->
+    <section class="app-page screen-portal-auth theme-inst" id="screen-inst-register">
+      <div class="portal-topbar">
+        <button type="button" class="btn-portal-back" id="btnBackFromInstReg" aria-label="Back">←</button>
+      </div>
+
+      <div class="portal-hero-center">
+        <div class="portal-hero-badge">🏛️</div>
+        <h2 class="portal-hero-title">Institution Registration</h2>
+        <p class="portal-hero-subtitle">Get started with Smart Campus</p>
+      </div>
+
+      <form id="formScreenInstReg" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegName">Institution Name</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="instScreenRegName" class="portal-input-field" placeholder="e.g. ABC College of Engineering" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegId">Institution ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🪪</span>
+            <input type="text" id="instScreenRegId" class="portal-input-field" placeholder="e.g. GEC-2026" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegAdminName">Campus Administrator Name</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="instScreenRegAdminName" class="portal-input-field" placeholder="e.g. Dr. S. K. Patnaik" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegEmail">Email Address</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">✉️</span>
+            <input type="email" id="instScreenRegEmail" class="portal-input-field" placeholder="e.g. principal@college.edu.in" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegPhone">Phone Number</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">📞</span>
+            <input type="tel" id="instScreenRegPhone" class="portal-input-field" placeholder="e.g. +91 98765 43210" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="instScreenRegPassword">Password</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="instScreenRegPassword" class="portal-input-field" placeholder="Create a strong password" required minlength="4" autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeInstReg" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitInstReg">
+          <span>Register Institution →</span>
+        </button>
+
+        <div class="portal-bottom-link">
+          Already have an account? <button type="button" id="btnGotoAdminLogin">Login</button>
+        </div>
+        </form>
+    </section>
+
+    <!-- SCREEN 3: ADMIN PORTAL (Picture 3) -->
+    <section class="app-page screen-portal-auth theme-admin" id="screen-admin-portal">
+      <div class="portal-topbar">
+        <button type="button" class="btn-portal-back" id="btnBackFromAdminPortal" aria-label="Back">←</button>
+      </div>
+
+      <div class="portal-hero-center">
+        <div class="portal-hero-badge">👤⚙️</div>
+        <h2 class="portal-hero-title">Admin Portal</h2>
+        <p class="portal-hero-subtitle">Login or Register</p>
+      </div>
+
+      <!-- Segmented Pill Toggle -->
+      <div class="portal-segmented-pill">
+        <button type="button" class="portal-seg-btn active" id="segBtnAdminLogin">Login</button>
+        <button type="button" class="portal-seg-btn" id="segBtnAdminRegister">Register</button>
+      </div>
+
+      <!-- Admin Login Form -->
+      <form id="formAdminLogin" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminLoginInstId">Institution ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="adminLoginInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminLoginUserId">Admin Login ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="adminLoginUserId" class="portal-input-field" placeholder="e.g. admin_gec" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminLoginPassword">Password</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="adminLoginPassword" class="portal-input-field" placeholder="Enter Password" required autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeAdminLogin" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <div class="portal-forgot-link">
+          <button type="button" id="btnForgotAdminPwd">Forgot Password?</button>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitAdminLogin">
+          <span>Login →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToAdminReg">
+          <span>+ Register as Admin</span>
+        </button>
+        </form>
+
+      <!-- Admin Register Form -->
+      <form id="formAdminRegister" style="display: none;" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegInstId">Institution ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="adminRegInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegName">Full Name *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="adminRegName" class="portal-input-field" placeholder="e.g. Dr. S. K. Patnaik" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegUserId">Admin Login ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🪪</span>
+            <input type="text" id="adminRegUserId" class="portal-input-field" placeholder="e.g. admin_gec" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegEmail">Official Email *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">✉️</span>
+            <input type="email" id="adminRegEmail" class="portal-input-field" placeholder="admin@college.edu.in" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegPhone">Phone Number *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">📞</span>
+            <input type="tel" id="adminRegPhone" class="portal-input-field" placeholder="+91 98765 43210" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="adminRegPassword">Create Password *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="adminRegPassword" class="portal-input-field" placeholder="Create password (min 4 chars)" required minlength="4" autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeAdminReg" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitAdminReg">
+          <span>Register as Admin →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToAdminLogin">
+          <span>← Back to Login</span>
+        </button>
+        </form>
+    </section>
+
+    <!-- SCREEN 4: STUDENT PORTAL (Picture 4) -->
+    <section class="app-page screen-portal-auth theme-student" id="screen-student-portal">
+      <div class="portal-topbar">
+        <button type="button" class="btn-portal-back" id="btnBackFromStudentPortal" aria-label="Back">←</button>
+      </div>
+
+      <div class="portal-hero-center">
+        <div class="portal-hero-badge">🎓</div>
+        <h2 class="portal-hero-title">Student Portal</h2>
+        <p class="portal-hero-subtitle">Login or Register</p>
+      </div>
+
+      <!-- Segmented Pill Toggle -->
+      <div class="portal-segmented-pill">
+        <button type="button" class="portal-seg-btn active" id="segBtnStudentLogin">Login</button>
+        <button type="button" class="portal-seg-btn" id="segBtnStudentRegister">Register</button>
+      </div>
+
+      <!-- Student Login Form -->
+      <form id="formStudentLogin" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentLoginInstId">Institution ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="studentLoginInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentLoginUserId">Student ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="studentLoginUserId" class="portal-input-field" placeholder="e.g. 2023CS001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentLoginPassword">Password</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="studentLoginPassword" class="portal-input-field" placeholder="Enter Password" required autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeStudentLogin" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <div class="portal-forgot-link">
+          <button type="button" id="btnForgotStudentPwd">Forgot Password?</button>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitStudentLogin">
+          <span>Login →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToStudentReg">
+          <span>+ Register as Student</span>
+        </button>
+        </form>
+
+      <!-- Student Register Form -->
+      <form id="formStudentRegister" style="display: none;" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegInstId">Institution ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="studentRegInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegName">Full Name *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="studentRegName" class="portal-input-field" placeholder="e.g. Ashish Kumar Sahoo" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegUserId">Student Roll / ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🪪</span>
+            <input type="text" id="studentRegUserId" class="portal-input-field" placeholder="e.g. 2023CS001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegBranch">Branch / Department *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏫</span>
+            <input type="text" id="studentRegBranch" class="portal-input-field" placeholder="e.g. Computer Science & Engineering" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegSection">Section *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏷️</span>
+            <input type="text" id="studentRegSection" class="portal-input-field" placeholder="e.g. Section A" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegEmail">Email Address *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">✉️</span>
+            <input type="email" id="studentRegEmail" class="portal-input-field" placeholder="student@college.edu.in" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegPhone">Phone Number *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">📞</span>
+            <input type="tel" id="studentRegPhone" class="portal-input-field" placeholder="+91 98765 43210" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="studentRegPassword">Create Password *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="studentRegPassword" class="portal-input-field" placeholder="Create password (min 4 chars)" required minlength="4" autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeStudentReg" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitStudentReg">
+          <span>Register as Student →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToStudentLogin">
+          <span>← Back to Login</span>
+        </button>
+        </form>
+    </section>
+
+    <!-- SCREEN 5: FACULTY PORTAL (Picture 5) -->
+    <section class="app-page screen-portal-auth theme-faculty" id="screen-faculty-portal">
+      <div class="portal-topbar">
+        <button type="button" class="btn-portal-back" id="btnBackFromFacultyPortal" aria-label="Back">←</button>
+      </div>
+
+      <div class="portal-hero-center">
+        <div class="portal-hero-badge">👥</div>
+        <h2 class="portal-hero-title">Faculty Portal</h2>
+        <p class="portal-hero-subtitle">Login or Register</p>
+      </div>
+
+      <!-- Segmented Pill Toggle -->
+      <div class="portal-segmented-pill">
+        <button type="button" class="portal-seg-btn active" id="segBtnFacultyLogin">Login</button>
+        <button type="button" class="portal-seg-btn" id="segBtnFacultyRegister">Register</button>
+      </div>
+
+      <!-- Faculty Login Form -->
+      <form id="formFacultyLogin" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyLoginInstId">Institution ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="facultyLoginInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyLoginUserId">Faculty ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="facultyLoginUserId" class="portal-input-field" placeholder="e.g. FAC001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyLoginPassword">Password</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="facultyLoginPassword" class="portal-input-field" placeholder="Enter Password" required autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeFacultyLogin" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <div class="portal-forgot-link">
+          <button type="button" id="btnForgotFacultyPwd">Forgot Password?</button>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitFacultyLogin">
+          <span>Login →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToFacultyReg">
+          <span>+ Register as Faculty</span>
+        </button>
+        </form>
+
+      <!-- Faculty Register Form -->
+      <form id="formFacultyRegister" style="display: none;" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegInstId">Institution ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="facultyRegInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegName">Full Name *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="facultyRegName" class="portal-input-field" placeholder="e.g. Prof. Rajesh Sharma" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegUserId">Faculty Staff ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🪪</span>
+            <input type="text" id="facultyRegUserId" class="portal-input-field" placeholder="e.g. FAC001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegBranch">Department / Specialization *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏫</span>
+            <input type="text" id="facultyRegBranch" class="portal-input-field" placeholder="e.g. Computer Science & Engineering" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegEmail">Email Address *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">✉️</span>
+            <input type="email" id="facultyRegEmail" class="portal-input-field" placeholder="faculty@college.edu.in" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegPhone">Phone Number *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">📞</span>
+            <input type="tel" id="facultyRegPhone" class="portal-input-field" placeholder="+91 98765 43210" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="facultyRegPassword">Create Password *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="facultyRegPassword" class="portal-input-field" placeholder="Create password (min 4 chars)" required minlength="4" autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeFacultyReg" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitFacultyReg">
+          <span>Register as Faculty →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToFacultyLogin">
+          <span>← Back to Login</span>
+        </button>
+        </form>
+    </section>
+
+    <!-- SCREEN 6: HOSTEL MANAGEMENT PORTAL (Picture 6) -->
+    <section class="app-page screen-portal-auth theme-hostel" id="screen-hostel-portal">
+      <div class="portal-topbar">
+        <button type="button" class="btn-portal-back" id="btnBackFromHostelPortal" aria-label="Back">←</button>
+      </div>
+
+      <div class="portal-hero-center">
+        <div class="portal-hero-badge">🏠</div>
+        <h2 class="portal-hero-title">Hostel Management</h2>
+        <p class="portal-hero-subtitle">Login or Register</p>
+      </div>
+
+      <!-- Segmented Pill Toggle -->
+      <div class="portal-segmented-pill">
+        <button type="button" class="portal-seg-btn active" id="segBtnHostelLogin">Login</button>
+        <button type="button" class="portal-seg-btn" id="segBtnHostelRegister">Register</button>
+      </div>
+
+      <!-- Hostel Login Form -->
+      <form id="formHostelLogin" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelLoginInstId">Institution ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="hostelLoginInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelLoginUserId">Hostel Staff ID</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="hostelLoginUserId" class="portal-input-field" placeholder="e.g. HM001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelLoginPassword">Password</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="hostelLoginPassword" class="portal-input-field" placeholder="Enter Password" required autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeHostelLogin" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <div class="portal-forgot-link">
+          <button type="button" id="btnForgotHostelPwd">Forgot Password?</button>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitHostelLogin">
+          <span>Login →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToHostelReg">
+          <span>+ Register as Hostel Staff</span>
+        </button>
+        </form>
+
+      <!-- Hostel Register Form -->
+      <form id="formHostelRegister" style="display: none;" autocomplete="off">
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegInstId">Institution ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏛️</span>
+            <input type="text" id="hostelRegInstId" class="portal-input-field" placeholder="Enter Institution ID" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegName">Staff Full Name *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">👤</span>
+            <input type="text" id="hostelRegName" class="portal-input-field" placeholder="e.g. Warden Ramesh Verma" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegUserId">Hostel Staff ID *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🪪</span>
+            <input type="text" id="hostelRegUserId" class="portal-input-field" placeholder="e.g. HM001" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegBranch">Hostel Wing / Block *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏢</span>
+            <input type="text" id="hostelRegBranch" class="portal-input-field" placeholder="e.g. Boys Hostel A / Block 1" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegDesignation">Superintendent Designation</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🏷️</span>
+            <select id="hostelRegDesignation" class="portal-input-field">
+              <option value="Hostel Warden / Staff">Hostel Staff / Warden</option>
+              <option value="Boys Hostel Superintendent">Boys Hostel Superintendent</option>
+              <option value="Girls Hostel Superintendent">Girls Hostel Superintendent</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegEmail">Email Address *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">✉️</span>
+            <input type="email" id="hostelRegEmail" class="portal-input-field" placeholder="hostel@college.edu.in" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegPhone">Phone Number *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">📞</span>
+            <input type="tel" id="hostelRegPhone" class="portal-input-field" placeholder="+91 98765 43210" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="portal-form-group">
+          <label class="portal-form-label" for="hostelRegPassword">Create Password *</label>
+          <div class="portal-input-container">
+            <span class="portal-input-icon">🔒</span>
+            <input type="password" id="hostelRegPassword" class="portal-input-field" placeholder="Create password (min 4 chars)" required minlength="4" autocomplete="off">
+            <button type="button" class="portal-eye-toggle" id="btnToggleEyeHostelReg" tabindex="-1">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="portal-btn-primary" id="btnSubmitHostelReg">
+          <span>Register as Hostel Staff →</span>
+        </button>
+
+        <div class="portal-divider"><span>OR</span></div>
+
+        <button type="button" class="portal-btn-outline" id="btnToggleToHostelLogin">
+          <span>← Back to Login</span>
+        </button>
+        </form>
+    </section>
+
+<!-- 1. STUDENT PAGES -->
+    
+    <!-- 1A. Student Profile (Home Page) -->
+    <section class="app-page" id="page-student-profile">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="user-profile-hero">
+        <div>
+          <span style="font-size:0.75rem; text-transform:uppercase; color:#a5b4fc; font-weight:700;">STUDENT PROFILE</span>
+          <h2 style="font-size:1.25rem; font-weight:700; color:#fff;" id="stuProfileName">Ashish Kumar Sahoo</h2>
+          <p style="font-size:0.8rem; color:var(--text-sub);" id="stuProfileSubtitle">CS-2024-082 • 5th Semester • Computer Science &amp; Engg</p>
+        </div>
+        <div class="profile-avatar-large">🎓</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-value" id="stuStatAttd">88.3%</div><div class="stat-label">Overall Attendance</div></div>
+        <div class="stat-item"><div class="stat-value" id="stuStatCgpa">8.72</div><div class="stat-label">Current CGPA</div></div>
+        <div class="stat-item"><div class="stat-value" id="stuStatPass">Approved</div><div class="stat-label">Gate Pass Status</div></div>
+        <div class="stat-item"><div class="stat-value">₹0 Due</div><div class="stat-label">Semester Dues</div></div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-title"><span>📌</span> Academic &amp; Contact Details</div>
+        <div style="font-size:0.82rem; line-height:1.8; color:var(--text-sub);">
+          <div>Institution ID: <strong style="color:#fff;" id="stuInstLabel">GEC-2026</strong></div>
+          <div>Branch &amp; Section: <strong style="color:#fff;" id="stuBranchSection">Computer Science &amp; Engineering • Section A</strong></div>
+          <div>Registered Email: <strong style="color:#a5b4fc;" id="stuEmailLabel">ashish.sahoo@campus.edu</strong></div>
+          <div>Contact Number: <strong style="color:#a5b4fc;" id="stuContactLabel">+91 98765 43210</strong></div>
+          <div>Hostel Allocation: <strong style="color:#34d399;" id="stuHostelLabel">A-Wing, Room 304</strong></div>
+          <div>Hostel Superintendent: <strong style="color:#60a5fa;">Dr. R. K. Nayak</strong></div>
+        </div>
+        <div style="margin-top: 14px;">
+          <button type="button" class="btn-secondary btn-signout" onclick="handleSignOut()">
+            <span>🚪</span> Sign Out of Student Portal
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1B. Student Attendance -->
+    <section class="app-page" id="page-student-attendance">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+        <div>
+          <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Attendance Record</h2>
+          <p style="font-size:0.75rem; color:#94a3b8;">Semester 6 • Computer Science &amp; Engg</p>
+        </div>
+      </div>
+
+      <!-- Circular Radial Progress Card (Picture 2 Mockup) -->
+      <div class="card-box" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:8px;">
+          <span style="font-size:0.82rem; font-weight:700; color:#fff;">Overall Aggregate</span>
+          <span style="font-size:0.7rem; background:rgba(16,185,129,0.15); color:#34d399; padding:3px 8px; border-radius:12px; font-weight:700;">Safe Zone (&gt;75%)</span>
+        </div>
+
+        <div class="circular-gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 160 160">
+            <defs>
+              <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#8b5cf6" />
+              </linearGradient>
+            </defs>
+            <circle class="gauge-bg-circle" cx="80" cy="80" r="68"></circle>
+            <circle class="gauge-fill-circle" id="attendanceGaugeCircle" cx="80" cy="80" r="68" stroke-dasharray="427.26" stroke-dashoffset="55.54"></circle>
+          </svg>
+          <div class="gauge-center-text">
+            <div class="gauge-pct-num" id="gaugePctDisplay">87%</div>
+            <div class="gauge-pct-label">Present</div>
+          </div>
+        </div>
+
+        <!-- 3 Legend Metrics (87% Present, 8% Absent, 5% Leave) -->
+        <div class="gauge-legend-row">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#8b5cf6;"></span>
+            <span>Present: <strong style="color:#fff;" id="legendPresentPct">87%</strong></span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#ef4444;"></span>
+            <span>Absent: <strong style="color:#fff;" id="legendAbsentPct">8%</strong></span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#f59e0b;"></span>
+            <span>Leave: <strong style="color:#fff;" id="legendLeavePct">5%</strong></span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px; padding:10px 14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; width:100%; display:flex; justify-content:space-between; font-size:0.75rem; color:#cbd5e1;">
+          <span>Attended: <strong style="color:#34d399;">136 / 154</strong> Lectures</span>
+          <span>Bunk Buffer: <strong style="color:#38bdf8;">+3 safe</strong></span>
+        </div>
+      </div>
+
+      <!-- Subject-wise Progress -->
+      <div class="section-headline">
+        <span>Subject Breakdown</span>
+        <span style="font-size:0.72rem; color:#94a3b8;">5 Enrolled Courses</span>
+      </div>
+      <div id="stuSubjectList"></div>
+    </section>
+
+    <!-- 1C. Student Fees & Dues -->
+    <section class="app-page" id="page-student-fees">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+
+      <!-- Institution Finance Header -->
+      <div style="background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 16px; margin-bottom: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:0.72rem; text-transform:uppercase; color:#6ee7b7; font-weight:800; letter-spacing:0.5px;">OFFICIAL INSTITUTION FEE GATEWAY</span>
+          <span class="approval-badge badge-approved" id="stuFeeVerifiedBadge">VERIFIED &amp; SECURE</span>
+        </div>
+        <h2 style="font-size:1.25rem; font-weight:800; color:#fff; margin-bottom:2px;" id="stuFeeInstTitle">Institutional Finance Desk</h2>
+        <p style="font-size:0.78rem; color:#a7f3d0; margin:0;">Pay college semester, hostel, and exam fees directly via Bank Transfer or UPI QR Code.</p>
+      </div>
+
+      <!-- Bank Details Card -->
+      <div class="card-box" style="margin-bottom: 14px;">
+        <div class="card-title"><span style="color:#38bdf8;">🏛️</span> Institution Bank Account Details</div>
+        <div style="font-size:0.82rem; line-height:1.9; color:var(--text-sub);">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:6px;">
+            <span>Bank Name:</span>
+            <strong style="color:#fff;" id="stuFeeBankName">State Bank of India</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding:6px 0;">
+            <span>Account Number:</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <strong style="color:#34d399; font-family:monospace; font-size:0.9rem;" id="stuFeeAccountNo">309811442586</strong>
+              <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard(document.getElementById('stuFeeAccountNo')?.textContent, 'Account Number')" title="Copy Account No" style="background:rgba(255,255,255,0.08); border:none; color:#a5b4fc; border-radius:6px; padding:2px 6px; font-size:0.68rem; cursor:pointer;">Copy</button>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding:6px 0;">
+            <span>IFSC Code:</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <strong style="color:#fff; font-family:monospace;" id="stuFeeIfsc">SBIN0010234</strong>
+              <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard(document.getElementById('stuFeeIfsc')?.textContent, 'IFSC Code')" title="Copy IFSC" style="background:rgba(255,255,255,0.08); border:none; color:#a5b4fc; border-radius:6px; padding:2px 6px; font-size:0.68rem; cursor:pointer;">Copy</button>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px;">
+            <span>Account Holder / Branch:</span>
+            <strong style="color:#e2e8f0;" id="stuFeeAccountHolder">Principal &amp; Campus Accounts</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPI & QR Code Scanner Card -->
+      <div class="card-box" style="margin-bottom: 14px; text-align:center;">
+        <div class="card-title" style="justify-content:center;"><span style="color:#a78bfa;">📱</span> Official Fee Payment QR Scanner &amp; UPI ID</div>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Scan the QR code using any UPI App (GPay, PhonePe, Paytm, BHIM) to make instant payment.</p>
+
+        <!-- Scannable QR Scanner Box -->
+        <div style="background:#ffffff; border-radius:16px; padding:16px; display:inline-flex; flex-direction:column; align-items:center; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:12px; border:2px solid #6366f1;">
+          <img id="stuFeeQrImg" src="" style="width:160px; height:160px; object-fit:contain; display:none; border-radius:8px;" alt="Fee Payment QR Code">
+          <div id="stuFeeDynamicQr" style="width:160px; height:160px; display:flex; align-items:center; justify-content:center;"></div>
+          <div style="font-size:0.68rem; font-weight:800; color:#1e293b; margin-top:8px; text-transform:uppercase; letter-spacing:0.5px;">INSTITUTION FEE SCANNER</div>
+        </div>
+
+        <!-- UPI ID Row -->
+        <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); border-radius:12px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="text-align:left;">
+            <div style="font-size:0.68rem; color:#a5b4fc; text-transform:uppercase; font-weight:700;">INSTITUTION UPI ID</div>
+            <strong style="font-size:0.95rem; color:#fff; font-family:monospace;" id="stuFeeUpiId">gec@sbi</strong>
+          </div>
+          <button type="button" class="btn-primary" onclick="window.copyToClipboard(document.getElementById('stuFeeUpiId')?.textContent, 'UPI ID')" style="padding:6px 14px; font-size:0.75rem;">
+            <span>📋</span> Copy UPI
+          </button>
+        </div>
+      </div>
+
+      <!-- Payment Receipt Generation CTA Card -->
+      <div class="card-box" style="margin-bottom: 14px; background:linear-gradient(135deg, #1e1b4b 0%, #172554 100%); border-color:rgba(99,102,241,0.3);">
+        <div class="card-title"><span style="color:#38bdf8;">🧾</span> Generate Verified Fee Receipt</div>
+        <p style="font-size:0.75rem; color:#cbd5e1; margin-bottom:12px;">Paid your fee? Submit your Transaction UTR and payment screenshot to generate your official signed e-receipt instantly.</p>
+        <button type="button" class="btn-primary" id="btnOpenFeeReceiptFromFees" style="width:100%; padding:14px; font-weight:800; font-size:0.9rem; justify-content:center;">
+          <span style="font-size:1.1rem;">🧾</span> Enter UTR &amp; Generate Payment Receipt
+        </button>
+      </div>
+
+      <!-- My Generated Fee Receipts -->
+      <div class="card-box">
+        <div class="card-title"><span>📂</span> My Verified Fee Receipts</div>
+        <div id="stuMyReceiptsList" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 1D. Student Class Timetable -->
+    <section class="app-page" id="page-student-timetable">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button type="button" class="btn-secondary btn-back-home" style="padding:6px 12px; font-size:0.8rem;">&larr; Back</button>
+        <div>
+          <h2 style="font-size:1.2rem; font-weight:800; color:#fff;">Class Routine &amp; Timetable</h2>
+          <p style="font-size:0.75rem; color:#94a3b8;">Daily lectures, lecture hall, and faculty.</p>
+        </div>
+      </div>
+
+      <!-- Day selector tabs (Picture 2: Mon 20, Tue 21, etc.) -->
+      <div class="requests-filter-pills" id="timetableDayPills" style="margin-bottom:14px;">
+        <button type="button" class="filter-pill active" data-ttday="Mon">Mon 20</button>
+        <button type="button" class="filter-pill" data-ttday="Tue">Tue 21</button>
+        <button type="button" class="filter-pill" data-ttday="Wed">Wed 22</button>
+        <button type="button" class="filter-pill" data-ttday="Thu">Thu 23</button>
+        <button type="button" class="filter-pill" data-ttday="Fri">Fri 24</button>
+        <button type="button" class="filter-pill" data-ttday="Sat">Sat 25</button>
+      </div>
+
+      <!-- Timeline Schedule -->
+      <div class="timetable-timeline-wrap" id="stuTimetablePeriods"></div>
+    </section>
+
+    <!-- 1E. Student Gate Pass -->
+    <section class="app-page" id="page-student-gatepass">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🎫</span> Request Gate Pass (Campus Day Outpass)</div>
+        <p class="card-subtitle">Submitted pass requests are routed exclusively to the <strong>Hostel Superintendent</strong> for approval.</p>
+        <form id="stuGatePassForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="gpReason">Purpose of Exit</label>
+            <input type="text" id="gpReason" class="form-control" placeholder="e.g. Doctor appointment / Library books purchase" required autocomplete="off">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label class="form-label" for="gpDeparture">Departure Time</label>
+              <input type="time" id="gpDeparture" class="form-control" value="17:00" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="gpReturn">Expected Return</label>
+              <input type="time" id="gpReturn" class="form-control" value="20:30" required autocomplete="off">
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📤</span> Submit Gate Pass to Hostel Superintendent
+          </button>
+        </form>
+        <div id="stuGatePassStatusArea" style="margin-top: 14px;"></div>
+      </div>
+    </section>
+
+    <!-- 1F. Student Hostel Leave Pass -->
+    <section class="app-page" id="page-student-leavepass">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🏠</span> Request Hostel Leave Pass (Home / Night Stay)</div>
+        <p class="card-subtitle">Overnight or weekend hostel leaves must be approved by the <strong>Hostel Superintendent</strong>.</p>
+        <form id="stuLeavePassForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="lpDestination">Destination / Home City</label>
+            <input type="text" id="lpDestination" class="form-control" placeholder="e.g. Cuttack, Odisha" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lpReason">Reason for Leave</label>
+            <input type="text" id="lpReason" class="form-control" placeholder="e.g. Family festival / Health recovery" required autocomplete="off">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label class="form-label" for="lpDepartureDate">Departure Date</label>
+              <input type="date" id="lpDepartureDate" class="form-control" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lpReturnDate">Return Date</label>
+              <input type="date" id="lpReturnDate" class="form-control" required autocomplete="off">
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📤</span> Submit Leave Pass to Hostel Superintendent
+          </button>
+        </form>
+        <div id="stuLeavePassStatusArea" style="margin-top: 14px;"></div>
+      </div>
+    </section>
+
+    <!-- 1G. Student Request Certificates -->
+    <section class="app-page" id="page-student-certificates">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📜</span> Request Institutional Certificates</div>
+        <form id="stuCertForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="certSelect">Select Certificate</label>
+            <select id="certSelect" class="form-control">
+              <option value="Bonafide Certificate">Bonafide Student Certificate</option>
+              <option value="Conduct &amp; Character Certificate">Conduct &amp; Character Certificate</option>
+              <option value="Fee Estimation Certificate">Fee Estimation / Bank Loan Certificate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="certPurpose">Purpose</label>
+            <input type="text" id="certPurpose" class="form-control" placeholder="e.g. Internship Application / Passport" required autocomplete="off">
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📄</span> Request &amp; Generate Certificate
+          </button>
+        </form>
+        <div id="stuCertPreview" style="margin-top: 14px; display: none;"></div>
+      </div>
+    </section>
+
+    <!-- 1H. Student Hostel Complaint Register -->
+    <section class="app-page" id="page-student-hostel-complaint">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🏢</span> Hostel Complaint Register</div>
+        <p class="card-subtitle">Submit room maintenance issues directly to hostel caretakers with a 24-hour resolution SLA.</p>
+        <form id="stuHostelComplaintForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="hcCategory">Issue Type</label>
+            <select id="hcCategory" class="form-control">
+              <option value="Electricity / Light / Fan">Electricity / Light / Fan</option>
+              <option value="Plumbing / Water Supply">Plumbing / Water Supply</option>
+              <option value="Wi-Fi / LAN Network">Wi-Fi / LAN Network</option>
+              <option value="Carpentry / Lock / Furniture">Carpentry / Lock / Furniture</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hcDesc">Complaint Details</label>
+            <textarea id="hcDesc" class="form-control" placeholder="Describe the issue in your room..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>🛠️</span> Register Hostel Complaint
+          </button>
+        </form>
+        <div id="stuHostelComplaintsList" style="margin-top: 14px;"></div>
+      </div>
+    </section>
+
+    <!-- 1I. Student Canteen Problem Register -->
+    <section class="app-page" id="page-student-canteen-problem">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🍽️</span> Canteen &amp; Mess Problem Register</div>
+        <p class="card-subtitle">Report meal hygiene, food quality, or canteen service concerns.</p>
+        <form id="stuCanteenForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="cpMeal">Concerned Meal / Counter</label>
+            <select id="cpMeal" class="form-control">
+              <option value="Breakfast Counter">Breakfast Counter</option>
+              <option value="Lunch Dining Hall">Lunch Dining Hall</option>
+              <option value="Evening Snacks Service">Evening Snacks Service</option>
+              <option value="Dinner Service">Dinner Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cpRating">Food Quality Rating</label>
+            <select id="cpRating" class="form-control">
+              <option value="⭐⭐⭐⭐⭐ 5 Stars - Excellent">⭐⭐⭐⭐⭐ 5 Stars - Excellent</option>
+              <option value="⭐⭐⭐⭐ 4 Stars - Good">⭐⭐⭐⭐ 4 Stars - Good</option>
+              <option value="⭐⭐⭐ 3 Stars - Average">⭐⭐⭐ 3 Stars - Average</option>
+              <option value="⭐⭐ 2 Stars - Below Expectations">⭐⭐ 2 Stars - Below Expectations</option>
+              <option value="⭐ 1 Star - Poor / Unhygienic">⭐ 1 Star - Poor / Unhygienic</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cpComments">Problem Description / Suggestion</label>
+            <textarea id="cpComments" class="form-control" placeholder="Describe the canteen service problem..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📨</span> Submit Canteen Feedback
+          </button>
+        </form>
+        <div id="stuCanteenHistory" style="margin-top: 14px;"></div>
+      </div>
+    </section>
+
+    <!-- 1J. Student Notices & Announcements -->
+    <section class="app-page" id="page-student-notices">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📢</span> Campus Notices &amp; Announcements</div>
+        <div id="stuNoticesFeed"></div>
+      </div>
+    </section>
+
+    <!-- 2. FACULTY PAGES -->
+
+    <!-- 2A. Faculty Profile (Home Page) -->
+    <section class="app-page" id="page-faculty-profile">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="user-profile-hero">
+        <div>
+          <span style="font-size:0.75rem; text-transform:uppercase; color:#a5b4fc; font-weight:700;">FACULTY PROFILE</span>
+          <h2 style="font-size:1.25rem; font-weight:700; color:#fff;" id="facProfileName">Prof. A. K. Sharma</h2>
+          <p style="font-size:0.8rem; color:var(--text-sub);" id="facProfileSubtitle">FAC-102 • Department of Computer Science &amp; Engg</p>
+        </div>
+        <div class="profile-avatar-large">👨‍🏫</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-value" id="facStatRole">Associate Prof</div><div class="stat-label">Designation</div></div>
+        <div class="stat-item"><div class="stat-value">5 Lectures</div><div class="stat-label">Today's Load</div></div>
+        <div class="stat-item"><div class="stat-value">140 Students</div><div class="stat-label">Assigned Batches</div></div>
+        <div class="stat-item"><div class="stat-value">CS501, CS503</div><div class="stat-label">Course Codes</div></div>
+      </div>
+
+      
+      <div class="card-box" style="margin-bottom: 14px;">
+        <div class="card-title"><span>👨‍🏫</span> Faculty Member Details</div>
+        <div style="font-size:0.82rem; line-height:1.8; color:var(--text-sub);">
+          <div>Institution ID: <strong style="color:#34d399;" id="facInstLabel">GEC-2026</strong></div>
+          <div>Faculty Staff ID: <strong style="color:#fff;" id="facStaffIdLabel">FAC-102</strong></div>
+          <div>Academic Department: <strong style="color:#fff;" id="facDeptLabel">Computer Science &amp; Engg</strong></div>
+          <div>Official Email: <strong style="color:#a5b4fc;" id="facEmailLabel">faculty@campus.edu</strong></div>
+          <div>Contact Number: <strong style="color:#a5b4fc;" id="facContactLabel">+91 94370 23456</strong></div>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-title"><span>📌</span> Faculty Quick Hub</div>
+        <p class="card-subtitle">Use the three-line menu in the corner to take attendance, upload certificates, or check timetable.</p>
+        <button type="button" class="btn-secondary btn-signout" onclick="handleSignOut()">
+          <span>🚪</span> Sign Out of Faculty Portal
+        </button>
+      </div>
+    </section>
+
+    <!-- 2B. Faculty Take Attendance -->
+    <section class="app-page" id="page-faculty-attendance">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div class="card-title" style="margin-bottom:0;"><span>📋</span> Take Student Attendance</div>
+          <button type="button" class="btn-emerald" id="btnFacMarkAllP" style="padding:6px 12px; font-size:0.75rem; height:auto; width:auto;">All [P]</button>
+        </div>
+        <p class="card-subtitle">Batch: B.Tech CSE 5th Sem • Subject: CS501 AI &amp; Machine Learning</p>
+        <div id="facRollCallList"></div>
+        <button type="button" class="btn-primary" id="btnFacSaveRollCall" style="margin-top: 14px;">
+          <span>💾</span> Save &amp; Broadcast Attendance
+        </button>
+      </div>
+    </section>
+
+    <!-- 2C. Faculty Upload Certificates -->
+    <section class="app-page" id="page-faculty-certificates">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📄</span> Upload &amp; Issue Student Certificates</div>
+        <form id="facIssueCertForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="icRoll">Student Roll Number</label>
+            <input type="text" id="icRoll" class="form-control" value="CS-2024-082" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="icName">Student Name</label>
+            <input type="text" id="icName" class="form-control" value="Ashish Kumar Sahoo" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="icType">Certificate Type</label>
+            <select id="icType" class="form-control">
+              <option value="Bonafide Certificate">Bonafide Certificate</option>
+              <option value="Conduct &amp; Character Certificate">Conduct &amp; Character Certificate</option>
+              <option value="Course Completion Certificate">Course Completion Certificate</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>✅</span> Verify &amp; Issue Certificate
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2D. Faculty Timetable -->
+    <section class="app-page" id="page-faculty-timetable">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📅</span> Faculty Teaching &amp; Work Timetable</div>
+        <div class="tt-day-tabs">
+          <button type="button" class="tt-day-btn active" data-day="Mon" onclick="showFacultyTimetable('Mon')">Mon</button>
+          <button type="button" class="tt-day-btn" data-day="Tue" onclick="showFacultyTimetable('Tue')">Tue</button>
+          <button type="button" class="tt-day-btn" data-day="Wed" onclick="showFacultyTimetable('Wed')">Wed</button>
+          <button type="button" class="tt-day-btn" data-day="Thu" onclick="showFacultyTimetable('Thu')">Thu</button>
+          <button type="button" class="tt-day-btn" data-day="Fri" onclick="showFacultyTimetable('Fri')">Fri</button>
+          <button type="button" class="tt-day-btn" data-day="Sat" onclick="showFacultyTimetable('Sat')">Sat</button>
+        </div>
+        <div id="facTimetableList"></div>
+      </div>
+    </section>
+
+    <!-- 2E. Faculty Notices -->
+    <section class="app-page" id="page-faculty-notices">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📢</span> Publish Departmental Notice</div>
+        <form id="facNoticeForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="fnTitle">Notice Headline</label>
+            <input type="text" id="fnTitle" class="form-control" placeholder="e.g. AI Lab Submission Deadline" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="fnBody">Details</label>
+            <textarea id="fnBody" class="form-control" placeholder="Write notice details..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📢</span> Post Notice
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2F. Faculty Notifications -->
+    <section class="app-page" id="page-faculty-notifications">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🔔</span> Faculty Notifications &amp; Alerts</div>
+        <div id="facNotificationList">
+          <div class="notice-card">
+            <h4>Academic Council Meeting</h4>
+            <p style="font-size:0.8rem; color:var(--text-sub);">Scheduled for Wednesday 3:30 PM in Conference Room A.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2G. HOSTEL SUPERINTENDENT SPECIAL APPROVALS (EXCLUSIVELY FOR SUPERINTENDENT) -->
+    <section class="app-page" id="page-faculty-superintendent">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🛡️</span> Hostel &amp; Gate Pass Approvals Desk</div>
+        <p class="card-subtitle">Exclusively assigned to the <strong>Hostel Superintendent</strong>. Review and approve student day outpasses and overnight leave passes.</p>
+        <div id="superintendentApprovalsList"></div>
+      </div>
+    </section>
+
+
+    
+    <!-- 4. HOSTEL MANAGEMENT FACULTY PAGES -->
+    
+    <!-- 4A. Hostel Management Profile -->
+    <section class="app-page" id="page-hostel-profile">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="user-profile-hero" style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(15, 23, 42, 0.95)); border-color: rgba(56, 189, 248, 0.3);">
+        <div>
+          <span style="font-size:0.75rem; text-transform:uppercase; color:#93c5fd; font-weight:700;">HOSTEL MANAGEMENT PORTAL</span>
+          <h2 style="font-size:1.25rem; font-weight:700; color:#fff;" id="hostelProfileName">Superintendent</h2>
+          <p style="font-size:0.8rem; color:var(--text-sub);" id="hostelProfileSubtitle">Hostel Superintendent</p>
+        </div>
+        <div class="profile-avatar-large">🛡️</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-value" id="hostelStatPendingGate">0</div><div class="stat-label">Pending Gate Passes</div></div>
+        <div class="stat-item"><div class="stat-value" id="hostelStatPendingLeave">0</div><div class="stat-label">Pending Leave Passes</div></div>
+        <div class="stat-item"><div class="stat-value" id="hostelStatApprovedTotal">0</div><div class="stat-label">Approved Passes</div></div>
+        <div class="stat-item"><div class="stat-value" style="font-size: 0.95rem; font-weight: 700; color: #38bdf8;" id="hostelStatRoleBadge">Superintendent</div><div class="stat-label">Superintendent Scope</div></div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-title"><span>📋</span> Superintendent Information</div>
+        <div style="font-size:0.82rem; line-height:1.8; color:var(--text-sub);">
+          <div>Institution ID: <strong style="color:#fff;" id="hostelInstLabel">GEC-2026</strong></div>
+          <div>Staff ID: <strong style="color:#fff;" id="hostelStaffIdLabel">WARDEN</strong></div>
+          <div>Designation: <strong style="color:#38bdf8;" id="hostelDesignationLabel">Hostel Superintendent</strong></div>
+          <div>Registered Email: <strong style="color:#a5b4fc;" id="hostelEmailLabel">superintendent@campus.edu</strong></div>
+          <div>Contact Number: <strong style="color:#a5b4fc;" id="hostelContactLabel">+91 94370 12345</strong></div>
+          <div>Jurisdiction: <strong style="color:#34d399;" id="hostelJurisdictionLabel">Assigned Hostels</strong></div>
+        </div>
+        <div style="margin-top: 14px;">
+          <button type="button" class="btn-secondary btn-signout" onclick="handleSignOut()">
+            <span>🚪</span> Sign Out of Hostel Management Portal
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4B. Pending Gate Pass Requests -->
+    <section class="app-page" id="page-hostel-gatepasses">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title">
+          <span>🎫</span> <span id="hostelGatePassHeader">Pending Gate Pass Requests</span>
+        </div>
+        <p class="card-subtitle" id="hostelGatePassSub">Review and approve day outpass requests assigned to your hostel jurisdiction.</p>
+        <div id="hostelGatePassContainer"></div>
+      </div>
+    </section>
+
+    <!-- 4C. Pending Hostel Leave Pass Requests -->
+    <section class="app-page" id="page-hostel-leavepasses">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title">
+          <span>🏠</span> <span id="hostelLeavePassHeader">Pending Hostel Leave Pass Requests</span>
+        </div>
+        <p class="card-subtitle" id="hostelLeavePassSub">Review and approve overnight / vacation home leave pass requests for your hostel jurisdiction.</p>
+        <div id="hostelLeavePassContainer"></div>
+      </div>
+    </section>
+
+    <!-- 4D. Hostel Notices & Announcements -->
+    <section class="app-page" id="page-hostel-notices">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title">
+          <span>📢</span> <span>Hostel Notices &amp; Announcements</span>
+        </div>
+        <p class="card-subtitle">Broadcast official circulars, mess timings, discipline alerts, and hostel gate rules.</p>
+        
+        <form id="formPostHostelNotice" style="margin-bottom: 20px;" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="hostelNoticeTitle">Notice Title *</label>
+            <input type="text" id="hostelNoticeTitle" class="form-control" placeholder="e.g. Evening Gate Closing Rules & Inspection" required autocomplete="off">
+          </div>
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label" for="hostelNoticeCategory">Category</label>
+              <select id="hostelNoticeCategory" class="form-control">
+                <option value="Gate Rules">Gate Rules</option>
+                <option value="Mess & Dining">Mess &amp; Dining</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Discipline">Discipline</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hostelNoticeAudience">Target Audience</label>
+              <select id="hostelNoticeAudience" class="form-control">
+                <option value="All Hostellers">All Hostellers</option>
+                <option value="Boys Hostel">Boys Hostel</option>
+                <option value="Girls Hostel">Girls Hostel</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hostelNoticeContent">Circular Content *</label>
+            <textarea id="hostelNoticeContent" class="form-control" rows="3" placeholder="Enter detailed circular / guidelines..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>📢</span> <span>Publish Hostel Notice</span>
+          </button>
+        </form>
+
+        <div class="card-title" style="font-size: 0.95rem; margin-top: 10px;"><span>📜</span> Active Hostel Circulars</div>
+        <div id="hostelNoticesContainer"></div>
+      </div>
+    </section>
+
+
+    <!-- 3. ADMINISTRATOR PAGES -->
+
+    <!-- 3A. Admin Overview (Home Page) -->
+    <section class="app-page" id="page-admin-overview">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="user-profile-hero" style="background: linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(15, 23, 42, 0.95)); border-color: rgba(167, 139, 250, 0.3);">
+        <div>
+          <span style="font-size:0.75rem; text-transform:uppercase; color:#c4b5fd; font-weight:800; letter-spacing:0.5px;">ADMINISTRATOR PROFILE</span>
+          <h2 style="font-size:1.25rem; font-weight:700; color:#fff;" id="adminProfileName">Campus Administrator</h2>
+          <p style="font-size:0.8rem; color:var(--text-sub);" id="adminProfileSubtitle">Campus Administrator &bull; Central Administration</p>
+        </div>
+        <div class="profile-avatar-large">🏛️</div>
+      </div>
+
+      <!-- Administrator Verified Credentials Card -->
+      <div class="card-box" style="margin-bottom: 14px;">
+        <div class="card-title"><span>🏛️</span> Administrator Account Details</div>
+        <div style="font-size: 0.82rem; line-height: 1.8; color: var(--text-sub);">
+          <div>Administrator Name: <strong style="color:#38bdf8;" id="adminFullNameLabel">Administrator</strong></div>
+          <div>Administrator ID: <strong style="color:#fff;" id="adminStaffIdLabel">admin_gec</strong></div>
+          <div>Designation: <strong style="color:#a5b4fc;" id="adminDesignationLabel">Campus Administrator</strong></div>
+          <div>Institution ID: <strong style="color:#34d399;" id="adminInstLabel">GEC-2026</strong></div>
+          <div>Branch / Office: <strong style="color:#fff;" id="adminDeptLabel">Central Administration</strong></div>
+          <div>Official Email: <strong style="color:#a5b4fc;" id="adminEmailLabel">admin@campus.edu</strong></div>
+          <div>Contact Number: <strong style="color:#a5b4fc;" id="adminContactLabel">+91 94370 12345</strong></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-value" id="adminStatProfileStudents">1,420</div><div class="stat-label">Total Students</div></div>
+        <div class="stat-item"><div class="stat-value" id="adminStatProfileFaculty">86</div><div class="stat-label">Faculty Members</div></div>
+        <div class="stat-item"><div class="stat-value" id="adminStatProfileAttendance">89.4%</div><div class="stat-label">Avg Attendance</div></div>
+        <div class="stat-item"><div class="stat-value" id="adminStatProfileRating">4.8 / 5</div><div class="stat-label">Campus Rating</div></div>
+      </div>
+
+      <!-- Admin Quick Master Actions -->
+      <div class="card-box" style="margin-bottom: 14px;">
+        <div class="card-title"><span>⚡</span> Administrator Master Tools</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <button type="button" class="btn-secondary" onclick="openAdminBankConfig()" style="font-size:0.75rem; padding:10px 8px; justify-content:center; text-align:center;">
+            <span>🏦</span> Bank &amp; Fee QR
+          </button>
+          <button type="button" class="btn-secondary" onclick="openAdminServiceCustomizer()" style="font-size:0.75rem; padding:10px 8px; justify-content:center; text-align:center;">
+            <span>⚙️</span> Customize Services
+          </button>
+          <button type="button" class="btn-secondary" onclick="openAdminFeedbackView('all')" style="font-size:0.75rem; padding:10px 8px; justify-content:center; text-align:center;">
+            <span>💬</span> Student Feedback
+          </button>
+          <button type="button" class="btn-secondary" onclick="switchView('page-digital-id', 'Digital ID Card')" style="font-size:0.75rem; padding:10px 8px; justify-content:center; text-align:center;">
+            <span>🪪</span> Digital ID Card
+          </button>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <button type="button" class="btn-secondary btn-signout" onclick="handleSignOut()">
+          <span>🚪</span> Sign Out of Admin Portal
+        </button>
+      </div>
+    </section>
+
+    <!-- 3B. Admin Student Records & Top Results -->
+    <section class="app-page" id="page-admin-students">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📊</span> Student Records, Attendance &amp; Top Performers</div>
+        <p class="card-subtitle">Comprehensive student academic records and attendance rankings across all branches.</p>
+        <div id="adminStudentRecordsList"></div>
+      </div>
+    </section>
+
+    <!-- 3C. Admin Faculty Directory -->
+    <section class="app-page" id="page-admin-faculties">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>👨‍🏫</span> Faculty Directory &amp; Branch Allocations</div>
+        <p class="card-subtitle">Registered teaching staff, designations, departments, and leadership roles.</p>
+        <div id="adminFacultyDirectoryList"></div>
+      </div>
+    </section>
+
+    <!-- 3D. Admin Master Timetables -->
+    <section class="app-page" id="page-admin-timetables">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>📅</span> Institutional Master Timetables</div>
+        <p class="card-subtitle">Master schedule covering classes, lecture halls, and faculty allocations.</p>
+        <div id="adminMasterTimetableList"></div>
+      </div>
+    </section>
+
+    <!-- 3E. Admin Faculty Teaching Feedback -->
+    <section class="app-page" id="page-admin-feedback-faculty">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>💬</span> Faculty Teaching Feedback Records</div>
+        <p class="card-subtitle">Student reviews and ratings for teaching faculty across departments.</p>
+        <div id="adminFeedbackFacultyList"></div>
+      </div>
+    </section>
+
+    <!-- 3F. Admin Hostel Service Feedback -->
+    <section class="app-page" id="page-admin-feedback-hostel">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🏢</span> Hostel Service Feedback &amp; Grievances</div>
+        <p class="card-subtitle">Read-only student reports on room facilities, electricity, plumbing, and warden assistance.</p>
+        <div id="adminFeedbackHostelList"></div>
+      </div>
+    </section>
+
+    <!-- 3G. Admin Canteen Service Feedback -->
+    <section class="app-page" id="page-admin-feedback-canteen">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box">
+        <div class="card-title"><span>🍽️</span> Canteen &amp; Mess Service Feedback</div>
+        <p class="card-subtitle">Read-only student ratings, food quality reviews, and hygiene reports.</p>
+        <div id="adminFeedbackCanteenList"></div>
+      </div>
+    </section>
+
+  
+    <!-- ================= 5. UNIVERSAL AI ASSISTANT ================= -->
+    <section class="app-page" id="page-ai-assistant">
+      <div class="subpage-top-bar">
+        <button type="button" class="btn-subpage-back" onclick="window.goBackPage()" aria-label="Go Back">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="card-box ai-chat-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;"><span>🤖</span> Smart Campus AI Assistant</div>
+            <p class="card-subtitle" style="margin-bottom:0;">Live 24/7 Smart Campus Co-Pilot</p>
+          </div>
+          <span class="ai-provider-badge" id="aiProviderBadge">⚡ Online</span>
+        </div>
+
+        <!-- Role-Specific Prompt Suggestions Chips -->
+        <div class="ai-prompt-chips" id="aiPromptChips">
+          <button type="button" class="ai-prompt-chip" data-prompt="How do I calculate my required attendance margin to stay above 75%?">📊 Attendance Margin</button>
+          <button type="button" class="ai-prompt-chip" data-prompt="Draft a polite and formal hostel leave pass application for weekend travel.">🏠 Leave Application</button>
+          <button type="button" class="ai-prompt-chip" data-prompt="Explain key differences between supervised and unsupervised machine learning in CS501.">💡 CS501 ML Concepts</button>
+          <button type="button" class="ai-prompt-chip" data-prompt="What are the procedures and UPI verification steps for semester fee payment?">💳 Fee Payment Steps</button>
+        </div>
+
+        <!-- Chat Conversation Messages Thread -->
+        <div class="ai-chat-thread" id="chatAiThread">
+          <div class="chat-bubble chat-bubble-ai">
+            <div class="chat-sender"><span>🤖</span> Campus AI Assistant</div>
+            <div class="chat-text">Welcome, How may I help you</div>
+            <div class="chat-time">Online</div>
+          </div>
+        </div>
+
+        <!-- Interactive Chat Input Form -->
+        <form id="chatAiForm" class="ai-chat-input-bar" autocomplete="off">
+          <input type="text" id="chatAiInput" class="form-control" placeholder="Ask anything to Campus AI Assistant..." required autocomplete="off">
+          <button type="button" class="btn-secondary btn-ai-mic" id="chatAiVoiceBtn" title="Voice Assistant (Tap to Speak)" style="padding: 10px 14px; border-radius: 12px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); color: #818cf8; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">
+            <span>🎙️</span>
+          </button>
+          <button type="submit" class="btn-primary btn-ai-send" id="chatAiSendBtn">
+            <span>🚀</span> <span>Send</span>
+          </button>
+          <button type="button" class="btn-secondary btn-ai-clear" id="chatAiClearBtn" title="Clear Chat History">
+            <span>🗑️</span>
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- Modal: Manual Institution ID Registration -->
+  <div class="modal-overlay" id="modalCreateInst">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>🏢 Create Institution ID (Manual)</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseCreateInst">✕</button>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 14px;">
+        Register your educational institution manually with zero subscription fees and no payment scanner.
+      </p>
+      <form id="formManualCreateInst" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="newInstName">Institution / College Name *</label>
+          <input type="text" id="newInstName" class="form-control" placeholder="e.g. Apex Technology Institute" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="newInstId">Custom Institution ID *</label>
+          <input type="text" id="newInstId" class="form-control" placeholder="e.g. APEX-2026 or ATI" required autocomplete="off">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label class="form-label" for="newAdminName">Admin Name *</label>
+            <input type="text" id="newAdminName" class="form-control" placeholder="Dr. S. K. Patnaik" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newAdminEmail">Official Email *</label>
+            <input type="email" id="newAdminEmail" class="form-control" placeholder="admin@apex.edu" required autocomplete="off">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label class="form-label" for="newAdminLoginId">Admin Login ID *</label>
+            <input type="text" id="newAdminLoginId" class="form-control" placeholder="admin_apex" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newAdminPassword">Admin Password *</label>
+            <input type="password" id="newAdminPassword" class="form-control" placeholder="Set password" required autocomplete="off">
+          </div>
+        </div>
+        <div style="margin: 10px 0; padding: 10px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border-light);">
+          <span style="font-size: 0.76rem; font-weight: 700; color: #a5b4fc;">💳 Student Fee Details (Optional)</span>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+            <input type="text" id="newBankName" class="form-control" placeholder="Bank Name (e.g. SBI)" autocomplete="off">
+            <input type="text" id="newAccountNo" class="form-control" placeholder="Account Number" autocomplete="off">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+            <input type="text" id="newIfsc" class="form-control" placeholder="IFSC Code" autocomplete="off">
+            <input type="text" id="newUpiId" class="form-control" placeholder="UPI ID (e.g. apex@sbi)" autocomplete="off">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary btn-emerald">
+          <span>✅</span> Create &amp; Activate Institution ID
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Server & Supabase Database Config -->
+  <div class="modal-overlay" id="modalServerConfig">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>⚙️ Server &amp; Database Config</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseServerConfig">✕</button>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">
+        Connect to your Supabase cloud backend or local server at <code>npm install @supabase/server</code>.
+      </p>
+      <div class="form-group">
+        <label class="form-label" for="inputServerUrl">Backend Server URL</label>
+        <input type="text" id="inputServerUrl" class="form-control" value="npm install @supabase/server" autocomplete="off">
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <button type="button" class="btn-secondary" id="btnTestServerConn" style="flex:1;"><span>🔍</span> Test Connection</button>
+        <button type="button" class="btn-primary" id="btnSaveServerUrl" style="flex:1;"><span>💾</span> Save Settings</button>
+      </div>
+      <div id="serverTestResult" style="margin-top: 12px; font-size: 0.8rem;"></div>
+    </div>
+  </div>
+
+  
+  <!-- FIXED BOTTOM NAVIGATION BAR (PICTURE 1 & 2) -->
+  <nav class="bottom-nav" id="bottomNav" style="display:none;">
+    <button type="button" class="bottom-nav-item active" id="navTabHome" data-page="page-home">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </button>
+    <button type="button" class="bottom-nav-item" id="navTabServices" data-page="page-services">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Services</span>
+    </button>
+    <button type="button" class="bottom-nav-fab" id="navFabNewRequest" title="Customize Services (+)" style="display:none;">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+    <button type="button" class="bottom-nav-item" id="navTabRequests" data-page="page-requests">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      <span>Requests</span>
+    </button>
+    <button type="button" class="bottom-nav-item" id="navTabMore" data-page="page-more">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>More</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: + NEW REQUEST BOTTOM SHEET (PICTURE 1) -->
+  <div class="modal-bottom-sheet" id="modalNewRequestSheet">
+    <div class="modal-bottom-sheet-content">
+      <div class="sheet-handle-bar"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">+ Create New Request</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseNewRequestSheet">✕</button>
+      </div>
+      <p style="font-size:0.78rem; color:#94a3b8; margin-bottom:14px;">Select the type of campus request to apply for:</p>
+
+      <div class="request-types-grid">
+        <button type="button" class="request-type-btn" id="reqTypeGatePass">
+          <span style="font-size:1.6rem;">🎫</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Day Gate Pass</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Campus day outpass &amp; QR</span>
+          </div>
+        </button>
+        <button type="button" class="request-type-btn" id="reqTypeLeavePass">
+          <span style="font-size:1.6rem;">🧳</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Hostel Leave Pass</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Weekend &amp; holiday travel</span>
+          </div>
+        </button>
+        <button type="button" class="request-type-btn" id="reqTypeComplaint">
+          <span style="font-size:1.6rem;">🛠️</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Hostel Complaint</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Room &amp; electrical repair</span>
+          </div>
+        </button>
+        <button type="button" class="request-type-btn" id="reqTypeCertificate">
+          <span style="font-size:1.6rem;">📜</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Certificate Request</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Bonafide &amp; NOC letter</span>
+          </div>
+        </button>
+        <button type="button" class="request-type-btn" id="reqTypeBusPass">
+          <span style="font-size:1.6rem;">🚌</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Bus Pass Registration</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Fleet transport route pass</span>
+          </div>
+        </button>
+        <button type="button" class="request-type-btn" id="reqTypeLibrary">
+          <span style="font-size:1.6rem;">📚</span>
+          <div>
+            <strong style="font-size:0.84rem; color:#fff; display:block;">Borrow Library Book</strong>
+            <span style="font-size:0.68rem; color:#94a3b8;">Search &amp; reserve textbook</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SUBMIT ASSIGNMENT SOLUTION -->
+  <div class="modal-overlay" id="modalSubmitAssignment">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>📝 Submit Assignment Solution</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseSubmitAssignment">✕</button>
+      </div>
+      <form id="formSubmitAssignment" autocomplete="off">
+        <input type="hidden" id="submitAsgId" autocomplete="off">
+        <div style="margin-bottom:10px;">
+          <h4 style="color:#fff; font-size:0.92rem;" id="submitAsgTitle">Decision Trees Implementation</h4>
+          <span style="font-size:0.74rem; color:#a5b4fc;" id="submitAsgCourse">CS501 AI &amp; ML</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="asgSolutionText">Solution Notes &amp; Code / Repository Link *</label>
+          <textarea id="asgSolutionText" class="form-control" rows="4" placeholder="Paste your solution code, GitHub repo URL, or analysis notes..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Attach Project File (ZIP / PDF / IPYNB)</label>
+          <input type="file" id="asgSolutionFile" class="form-control" accept=".zip,.pdf,.py,.ipynb,.doc,.docx" autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top:12px;">
+          <span>🚀</span> Confirm &amp; Submit Assignment
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: FACULTY CREATE ASSIGNMENT -->
+  <div class="modal-overlay" id="modalCreateAssignment">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>➕ Create New Course Assignment</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseCreateAssignment">✕</button>
+      </div>
+      <form id="formCreateAssignment" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="createAsgCourse">Course Code &amp; Title *</label>
+          <input type="text" id="createAsgCourse" class="form-control" placeholder="e.g. CS501 AI &amp; Machine Learning" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="createAsgTitle">Assignment Title *</label>
+          <input type="text" id="createAsgTitle" class="form-control" placeholder="e.g. Practical Lab 4: Convolutional Neural Networks" required autocomplete="off">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="form-group">
+            <label class="form-label" for="createAsgDueDate">Submission Deadline *</label>
+            <input type="date" id="createAsgDueDate" class="form-control" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="createAsgMarks">Max Marks *</label>
+            <input type="number" id="createAsgMarks" class="form-control" value="20" required autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="createAsgDesc">Problem Statement &amp; Guidelines *</label>
+          <textarea id="createAsgDesc" class="form-control" rows="3" placeholder="Explain the project milestones, deliverables, and submission format..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="createAsgFile">📎 Upload Assignment / Question Paper File (Optional)</label>
+          <input type="file" id="createAsgFile" class="form-control" accept=".pdf,.doc,.docx,.zip,.txt,.png,.jpg,.jpeg">
+          <div id="createAsgFilePreview" style="font-size:0.75rem; color:#818cf8; margin-top:4px; display:none;"></div>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top:12px;">
+          <span>📢</span> Publish Assignment to Students
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="assets/qrcode.min.js"></script>
+  <script src="app.js"></script>
+<input type="file" id="userPhotoUploadInput" accept="image/*" style="display: none;" autocomplete="off">
+
+  <!-- =========================================================================
+       NEW ENTERPRISE MODALS (ROLE-BASED SERVICES, BANKING, FEEDBACK & HELP)
+       ========================================================================= -->
+
+  <!-- 1. ADMIN SERVICE CUSTOMIZER MODAL (PICTURE 1: '+' BUTTON / CUSTOMIZATION) -->
+  <div class="modal-overlay" id="modalAdminServiceCustomizer">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">⚙️ Service Customizer (Admin)</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseServiceCustomizer">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Add new services or remove existing services for Students, Faculty, and Hostel Management.</p>
+
+      <!-- Role Selector Tabs -->
+      <div style="display:flex; gap:6px; margin-bottom:14px; background:rgba(255,255,255,0.05); padding:4px; border-radius:12px;">
+        <button type="button" class="btn-segmented active" id="tabCustStudent" data-target="student" style="flex:1; padding:6px; font-size:0.75rem;">Student Services</button>
+        <button type="button" class="btn-segmented" id="tabCustFaculty" data-target="faculty" style="flex:1; padding:6px; font-size:0.75rem;">Faculty Services</button>
+        <button type="button" class="btn-segmented" id="tabCustHostel" data-target="hostel_faculty" style="flex:1; padding:6px; font-size:0.75rem;">Hostel Services</button>
+      </div>
+
+      <!-- Add New Service Form -->
+      <form id="formAddCustomService" style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; margin-bottom:16px;" autocomplete="off">
+        <div style="font-weight:700; color:#38bdf8; font-size:0.85rem; margin-bottom:8px;">+ Add New Service for Selected Role</div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Service Title *</label>
+          <input type="text" id="custServiceTitle" class="form-control" placeholder="e.g. Placement Drive &amp; Internships" required autocomplete="off">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:8px; margin-bottom:8px;">
+          <div>
+            <label class="form-label">Icon / Emoji</label>
+            <input type="text" id="custServiceIcon" class="form-control" value="💼" maxlength="4" autocomplete="off">
+          </div>
+          <div>
+            <label class="form-label">Category</label>
+            <select id="custServiceCategory" class="form-control">
+              <option value="Academic">Academic</option>
+              <option value="Career &amp; Placement">Career &amp; Placement</option>
+              <option value="Campus Facilities">Campus Facilities</option>
+              <option value="Student Logistics">Student Logistics</option>
+              <option value="General">General</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Short Description</label>
+          <input type="text" id="custServiceDesc" class="form-control" placeholder="Brief explanation of this service" autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:9px; font-size:0.82rem;">
+          <span>➕</span> Add Service for Selected Role
+        </button>
+      </form>
+
+      <!-- Active Services List with Delete / Remove -->
+      <div style="font-weight:700; color:#fff; font-size:0.85rem; margin-bottom:8px;">Active Services for This Role (Tap 🗑️ to Delete)</div>
+      <div id="custActiveServicesContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- 2. ADMIN BANKING & FEE QR SCANNER UPLOAD MODAL -->
+  <div class="modal-overlay" id="modalAdminBankConfig">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">💳 Institution Banking &amp; Fee QR</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseAdminBankConfig">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Configure your institution bank account details, official UPI ID, and fee payment QR scanner. Students will use this to pay fees online.</p>
+
+      <form id="formAdminBankConfig" autocomplete="off">
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Bank Name *</label>
+          <input type="text" id="cfgBankName" class="form-control" placeholder="e.g. State Bank of India" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Account Number *</label>
+          <input type="text" id="cfgAccountNo" class="form-control" placeholder="e.g. 309811442586" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">IFSC Code *</label>
+          <input type="text" id="cfgIfsc" class="form-control" placeholder="e.g. SBIN0010234" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Institutional UPI ID *</label>
+          <input type="text" id="cfgUpiId" class="form-control" placeholder="e.g. gec@sbi or campusfees@okaxis" required autocomplete="off">
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;">
+          <label class="form-label">Fee Payment QR Code Scanner</label>
+          <div style="display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); border-radius:12px; padding:10px;">
+            <div id="cfgQrPreviewBox" style="width:70px; height:70px; background:#1e293b; border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+              <span id="cfgQrPlaceholder" style="font-size:1.8rem;">📱</span>
+              <img id="cfgQrImg" src="" style="width:100%; height:100%; object-fit:contain; display:none;" alt="QR Code">
+            </div>
+            <div style="flex:1;">
+              <input type="file" id="cfgQrFileInput" accept="image/*" style="font-size:0.75rem; color:#cbd5e1; margin-bottom:6px;" autocomplete="off">
+              <p style="font-size:0.7rem; color:#94a3b8; margin:0;">Upload institutional UPI payment QR image or scanner code.</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; padding:10px;">
+          <span>💾</span> Save Institutional Bank &amp; QR Details
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. ADMIN CONFIDENTIAL STUDENT FEEDBACK VIEWER (ADMIN ONLY!) -->
+  <div class="modal-overlay" id="modalAdminFeedbackView">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">💬 Confidential Student Feedback</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseAdminFeedback">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#f43f5e; font-weight:600; margin-bottom:10px;">🔒 Protected View: Accessible exclusively to Campus Administrator. Students submit ratings and feedback confidentially.</p>
+
+      <!-- Category Filter Pills -->
+      <div style="display:flex; gap:6px; margin-bottom:12px; background:rgba(255,255,255,0.05); padding:4px; border-radius:12px;">
+        <button type="button" class="btn-segmented active" id="fbFilterAll" data-cat="all" style="flex:1; padding:5px; font-size:0.72rem;">All</button>
+        <button type="button" class="btn-segmented" id="fbFilterFaculty" data-cat="faculty" style="flex:1; padding:5px; font-size:0.72rem;">👨‍🏫 Faculty</button>
+        <button type="button" class="btn-segmented" id="fbFilterHostel" data-cat="hostel" style="flex:1; padding:5px; font-size:0.72rem;">🏢 Hostel</button>
+        <button type="button" class="btn-segmented" id="fbFilterCanteen" data-cat="canteen" style="flex:1; padding:5px; font-size:0.72rem;">🍲 Canteen</button>
+      </div>
+
+      <div id="adminFeedbackCardsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- 4. STUDENT CONFIDENTIAL FEEDBACK SUBMISSION MODAL -->
+  <div class="modal-overlay" id="modalStudentFeedback">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">💬 Confidential Campus Feedback</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseStudentFeedback">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Your feedback is confidential and delivered strictly to the Central Campus Administrator to maintain and improve campus standards.</p>
+
+      <form id="formStudentFeedback" autocomplete="off">
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Feedback Category *</label>
+          <select id="stuFbCategory" class="form-control" required>
+            <option value="faculty">Academic Faculty &amp; Teaching</option>
+            <option value="hostel">Hostel Management &amp; Facilities</option>
+            <option value="canteen">Canteen &amp; Mess Management</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Subject / Staff / Facility Name</label>
+          <input type="text" id="stuFbTargetName" class="form-control" placeholder="e.g. Prof. A.K. Sharma or Brahmaputra Mess Staff" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label">Rating (1 to 5 Stars) *</label>
+          <div style="display:flex; gap:8px; font-size:1.6rem; cursor:pointer;" id="stuFbStarRow">
+            <span class="fb-star" data-rating="1">⭐</span>
+            <span class="fb-star" data-rating="2">⭐</span>
+            <span class="fb-star" data-rating="3">⭐</span>
+            <span class="fb-star" data-rating="4">⭐</span>
+            <span class="fb-star" data-rating="5">⭐</span>
+          </div>
+          <input type="hidden" id="stuFbRatingVal" value="5" autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Detailed Comments &amp; Suggestions *</label>
+          <textarea id="stuFbComments" class="form-control" rows="3" placeholder="Share your honest experience, concerns, or constructive suggestions..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:10px;">
+          <span>📤</span> Submit Confidential Feedback to Admin
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. STUDENT FEE PAYMENT RECEIPT GENERATOR MODAL -->
+  <div class="modal-overlay" id="modalStudentFeeReceipt">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">🧾 Generate Fee Payment Receipt</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseStudentFeeReceipt">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Enter your payment details, transaction UTR number, and upload proof to generate your official digitally stamped fee receipt.</p>
+
+      <form id="formStudentFeeReceipt" autocomplete="off">
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Select Fee Head *</label>
+          <select id="receiptFeeHead" class="form-control" required>
+            <option value="Semester Tuition Fee">Semester Tuition Fee (₹42,500)</option>
+            <option value="Hostel &amp; Mess Dues">Hostel &amp; Mess Dues (₹18,000)</option>
+            <option value="Examination Fee">Semester Examination Fee (₹2,200)</option>
+            <option value="Transportation Pass Fee">Transportation Pass Fee (₹6,000)</option>
+            <option value="Library Fine / Misc Dues">Library Fine / Misc Dues (₹350)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Amount Paid (₹) *</label>
+          <input type="number" id="receiptAmount" class="form-control" value="42500" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Transaction ID / UTR Number *</label>
+          <input type="text" id="receiptUtr" class="form-control" placeholder="e.g. UPI/628192019482 or SBI88192348" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Payment Date *</label>
+          <input type="date" id="receiptDate" class="form-control" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Payment Screenshot / Transfer Proof</label>
+          <input type="file" id="receiptProofFile" accept="image/*" class="form-control" style="font-size:0.75rem;" autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:10px;">
+          <span>🧾</span> Verify &amp; Generate Stamped Receipt
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. VERIFIED STAMPED FEE RECEIPT DISPLAY MODAL -->
+  <div class="modal-overlay" id="modalFeeReceiptDisplay">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto; text-align:center;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">Official Institutional Fee Receipt</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseFeeReceiptDisplay">✕</button>
+      </div>
+
+      <!-- Printable Stamped Receipt Container -->
+      <div id="stampedReceiptPrintContainer" style="background:#ffffff; color:#0f172a; border-radius:12px; padding:18px; margin:10px 0; text-align:left; border:2px solid #3b82f6; position:relative; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+        <div style="border-bottom:2px dashed #94a3b8; padding-bottom:10px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:1.1rem; font-weight:900; color:#1e3a8a;" id="rcptInstName">GEC BHUBANESWAR</div>
+            <div style="font-size:0.68rem; color:#475569;">Central Finance Desk • E-Receipt Portal</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.65rem; font-weight:700; color:#059669; background:#d1fae5; padding:2px 8px; border-radius:10px;">PAID &amp; VERIFIED</div>
+            <div style="font-size:0.65rem; color:#64748b; margin-top:2px;" id="rcptNumber">GEC/2026/FEE/84920</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.75rem; margin-bottom:12px;">
+          <div><strong>Student Name:</strong> <span id="rcptStudentName">Ashish Kumar Sahoo</span></div>
+          <div><strong>Roll Number:</strong> <span id="rcptStudentRoll">CS-2024-082</span></div>
+          <div><strong>Department:</strong> <span id="rcptDept">Computer Science</span></div>
+          <div><strong>Semester:</strong> <span id="rcptSem">5th Semester</span></div>
+          <div><strong>Payment Date:</strong> <span id="rcptDate">2026-10-08</span></div>
+          <div><strong>Transaction UTR:</strong> <span id="rcptUtr" style="font-family:monospace; color:#2563eb;">UPI/928172910</span></div>
+        </div>
+
+        <div style="background:#f1f5f9; border-radius:8px; padding:10px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+            <span id="rcptFeeHeadTitle">Semester Tuition Fee</span>
+            <span id="rcptAmountVal" style="color:#1e3a8a; font-size:1.05rem;">₹42,500</span>
+          </div>
+        </div>
+
+        <!-- Official Stamp Graphic -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="font-size:0.65rem; color:#64748b;">
+            Bank Reference: Validated via UPI Gateway<br>
+            Verification Hash: 8F92-A109-77B2-C011
+          </div>
+          <div style="border:2px solid #dc2626; border-radius:8px; padding:4px 10px; transform:rotate(-8deg); text-align:center;">
+            <div style="font-size:0.65rem; font-weight:900; color:#dc2626; letter-spacing:1px;">SMART CAMPUS</div>
+            <div style="font-size:0.55rem; color:#dc2626; font-weight:700;">FEES RECEIVED &amp; STAMPED</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button type="button" class="btn-primary" id="btnDownloadReceiptPdf" style="flex:1;">
+          <span>📥</span> Save to Device
+        </button>
+        <button type="button" class="btn-secondary" id="btnPrintReceiptBtn" style="flex:1;">
+          <span>🖨️</span> Print Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. FACULTY CERTIFICATE ISSUANCE MODAL -->
+  <div class="modal-overlay" id="modalFacultyIssueCertificate">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">📜 Issue Student Certificate</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseFacultyCertModal">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Upload and issue official certificates for a student. The student will instantly view and download it from their certificates desk.</p>
+
+      <form id="formFacultyIssueCert" autocomplete="off">
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Student Roll Number *</label>
+          <input type="text" id="certIssueRoll" class="form-control" placeholder="e.g. CS-2024-082" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Student Full Name *</label>
+          <input type="text" id="certIssueStudentName" class="form-control" placeholder="e.g. Ashish Kumar Sahoo" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Certificate Title *</label>
+          <input type="text" id="certIssueTitle" class="form-control" placeholder="e.g. Bonafide Student Certificate 2026-27" required autocomplete="off">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label class="form-label">Certificate Category</label>
+          <select id="certIssueType" class="form-control">
+            <option value="Bonafide Certificate">Bonafide Certificate</option>
+            <option value="Character Certificate">Character Certificate</option>
+            <option value="Merit Achievement Award">Merit Achievement Award</option>
+            <option value="Course Completion Certificate">Course Completion Certificate</option>
+            <option value="NOC for Internship">NOC for Internship</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Authorized Faculty Signatory</label>
+          <input type="text" id="certIssueFacultySign" class="form-control" value="Prof. A.K. Sharma, Academic Dean" autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:10px;">
+          <span>📜</span> Issue &amp; Publish Certificate for Student
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. HELP & SUPPORT MODAL (SETTINGS) -->
+  <div class="modal-overlay" id="modalHelpSupport">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">🎧 Help &amp; Campus Support</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseHelpSupport">✕</button>
+      </div>
+      <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:14px;">Instant institutional assistance, emergency contacts, FAQs, and ticket desk.</p>
+
+      <!-- Institutional Contact Cards -->
+      <div style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; margin-bottom:14px;">
+        <div style="font-weight:700; color:#38bdf8; font-size:0.85rem; margin-bottom:6px;">🏢 Institutional IT &amp; Academic Helpdesk</div>
+        <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.5;">
+          📞 Helpline: <strong style="color:#fff;" id="helpPhoneLabel">+91 674 2901234</strong><br>
+          ✉️ Email: <strong style="color:#a78bfa;" id="helpEmailLabel">support@campus.edu</strong><br>
+          🕒 Hours: Monday - Saturday (08:30 AM - 06:00 PM)
+        </div>
+      </div>
+
+      <!-- Campus Emergency Services -->
+      <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:12px; padding:12px; margin-bottom:14px;">
+        <div style="font-weight:700; color:#f87171; font-size:0.85rem; margin-bottom:6px;">🚨 Campus Emergency Helplines</div>
+        <div style="font-size:0.78rem; color:#fca5a5; line-height:1.5;">
+          🚑 Campus Ambulance: <strong>+91 98765 11223</strong><br>
+          🛡️ Main Gate Security: <strong>+91 98765 44556</strong><br>
+          🌸 Women's Grievance Cell: <strong>+91 98765 77889</strong>
+        </div>
+      </div>
+
+      <!-- Quick Raise Ticket -->
+      <div style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px;">
+        <div style="font-weight:700; color:#fff; font-size:0.85rem; margin-bottom:8px;">📝 Submit Support Ticket</div>
+        <form id="formSubmitSupportTicket" autocomplete="off">
+          <div class="form-group" style="margin-bottom:8px;">
+            <input type="text" id="ticketSubject" class="form-control" placeholder="Issue Subject (e.g. Wi-Fi down in Lab 2)" required autocomplete="off">
+          </div>
+          <div class="form-group" style="margin-bottom:8px;">
+            <textarea id="ticketDesc" class="form-control" rows="2" placeholder="Explain your problem or question..." required></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%; padding:8px; font-size:0.8rem;">
+            <span>📨</span> Submit Ticket to Campus Admin
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. ABOUT SMART CAMPUS MODAL (SETTINGS) -->
+  <div class="modal-overlay" id="modalAboutSmartCampus">
+    <div class="modal-sheet" style="max-height:85vh; overflow-y:auto; text-align:center;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">ℹ️ About Smart Campus</h3>
+        <button type="button" class="drawer-close-btn" id="btnCloseAboutModal">✕</button>
+      </div>
+
+      <div style="font-size:2.4rem; margin:10px 0;">🏫</div>
+      <h3 style="font-size:1.2rem; font-weight:900; color:#fff; margin-bottom:4px;">Smart Campus Platform</h3>
+      <div style="font-size:0.75rem; color:#a78bfa; font-weight:700; margin-bottom:14px;">Version 4.0.0 (Enterprise Multi-Tenant Edition)</div>
+
+      <div style="background:#131c31; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; text-align:left; font-size:0.75rem; color:#cbd5e1; line-height:1.6; margin-bottom:14px;">
+        <p style="margin:0 0 6px 0;"><strong>🏢 Multi-Tenant Data Protection:</strong> Each registered institution operates in an isolated data container identified by its unique Institution ID. User data, notices, attendance, and finances are strictly private and never shared.</p>
+        <p style="margin:0 0 6px 0;"><strong>☁️ Cloud Database:</strong> Fully integrated with Supabase PostgreSQL cloud database for persistent synchronization and offline caching.</p>
+        <p style="margin:0 0 6px 0;"><strong>📱 Hybrid Native App:</strong> Powered by Capacitor Android Native runtime with offline persistence and bi-directional web sync.</p>
+        <p style="margin:0;"><strong>🤖 AI Intelligence:</strong> Integrated with Grok AI Assistant for universal academic and campus assistance.</p>
+      </div>
+
+      <div style="font-size:0.7rem; color:#94a3b8;">
+        Designed &amp; Developed with Google DeepMind Antigravity Pair-Programming.<br>
+        All rights reserved © 2026 Smart Campus Platform.
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
