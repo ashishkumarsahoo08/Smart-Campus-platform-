@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful | Smart Campus Platform</title>
+  <meta name="description" content="Official Payment Confirmation & Verified E-Receipt for Smart Campus Platform.">
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.12), transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08), transparent 40%),
+                  #0b1120;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    .success-container {
+      width: 100%;
+      max-width: 680px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                  0 0 40px rgba(16, 185, 129, 0.15);
+      padding: 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInScale 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.94) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .success-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #10b981, #06b6d4, #10b981);
+      background-size: 200% 100%;
+      animation: shimmerBar 3s linear infinite;
+    }
+
+    @keyframes shimmerBar {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    .checkmark-wrap {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid rgba(16, 185, 129, 0.45);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      position: relative;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .checkmark-icon {
+      width: 44px;
+      height: 44px;
+      stroke: #10b981;
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      animation: drawCheck 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0 0 2rem;
+    }
+
+    .receipt-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem;
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .receipt-row:first-child {
+      padding-top: 0;
+    }
+
+    .receipt-label {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .receipt-value {
+      color: #f1f5f9;
+      font-weight: 700;
+      font-family: monospace;
+      font-size: 0.92rem;
+    }
+
+    .amount-highlight {
+      font-size: 1.45rem;
+      color: #34d399;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .status-badge-settled {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.85rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-action-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      padding: 0.85rem 1.6rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-action-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-action-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      padding: 0.85rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .institution-pill {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: #93c5fd;
+      text-align: left;
+      display: none;
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-container">
+    <!-- Animated Success Checkmark -->
+    <div class="checkmark-wrap">
+      <svg class="checkmark-icon" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <h1 class="title">Payment Confirmed!</h1>
+    <p class="subtitle">Your transaction has been verified in real time by the automated banking switch. Your subscription is active.</p>
+
+    <!-- Optional Institution Onboarding Pill -->
+    <div id="instCredentialsPill" class="institution-pill">
+      <div style="font-weight: 700; color: #60a5fa; margin-bottom: 4px;">🏛️ Institutional Provisioning Summary:</div>
+      <div id="instCredentialsBody">Your college account is ready. Use your master credentials to log in.</div>
+    </div>
+
+    <!-- Official Transaction Details Card -->
+    <div class="receipt-card">
+      <div class="receipt-row">
+        <span class="receipt-label">Payment Status</span>
+        <span class="status-badge-settled">
+          <span class="status-dot"></span>
+          <span>Verified & Settled</span>
+        </span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">Order Reference ID</span>
+        <span class="receipt-value" id="displayOrderId">ORD-VERIFYING...</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">Bank Reference (RRN)</span>
+        <span class="receipt-value" id="displayBankRrn">TXN-AUTOSWITCH</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">Amount Paid</span>
+        <span class="amount-highlight" id="displayAmount">₹1.00</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">Verification Switch</span>
+        <span class="receipt-value" style="color: #94a3b8; font-family: inherit; font-size: 0.85rem;" id="displayChannel">Automated Instant Switch</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">Settlement Timestamp</span>
+        <span class="receipt-value" style="font-size: 0.82rem; color: #cbd5e1;" id="displayTimestamp">—</span>
+      </div>
+    </div>
+
+    <!-- Navigation / Next Steps Actions -->
+    <div class="action-buttons">
+      <a href="/#portals" class="btn-action-primary" id="btnGoToDashboard">
+        <span>🚀 Proceed to Campus Portals</span>
+      </a>
+      <button type="button" class="btn-action-secondary" id="btnPrintReceipt">
+        <span>🖨️ Print E-Receipt</span>
+      </button>
+      <a href="/" class="btn-action-secondary">
+        <span>🏠 Home</span>
+      </a>
+    </div>
+
+    <div class="footer-note">
+      Official Smart Campus SaaS Institutional License. Valid for university and regulatory audit records.
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // 1. Parse URL Query Parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('orderId') || urlParams.get('id') || urlParams.get('transactionId') || 'ORD-VERIFIED';
+      const amount = urlParams.get('amount') || '1';
+      const instName = urlParams.get('institution') || '';
+      const instId = urlParams.get('institutionId') || '';
+
+      const elOrderId = document.getElementById('displayOrderId');
+      const elBankRrn = document.getElementById('displayBankRrn');
+      const elAmount = document.getElementById('displayAmount');
+      const elTimestamp = document.getElementById('displayTimestamp');
+      const instPill = document.getElementById('instCredentialsPill');
+      const instBody = document.getElementById('instCredentialsBody');
+
+      if (elOrderId) elOrderId.textContent = orderId;
+      if (elAmount) elAmount.textContent = '₹' + Number(amount).toFixed(2);
+      if (elTimestamp) elTimestamp.textContent = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'medium' }) + ' IST';
+
+      // 2. Fetch live verified status from status inquiry API
+      if (orderId && orderId !== 'ORD-VERIFIED') {
+        fetch('/api/payment/status/' + encodeURIComponent(orderId))
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.success) {
+              if (data.bankRrn && elBankRrn) elBankRrn.textContent = data.bankRrn;
+              if (data.amount && elAmount) elAmount.textContent = '₹' + Number(data.amount).toFixed(2);
+              if (data.verifiedAt && elTimestamp) {
+                elTimestamp.textContent = new Date(data.verifiedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'medium' }) + ' IST';
+              }
+            }
+          })
+          .catch(() => {});
+      }
+
+      // 3. Check Session Storage for registration details
+      try {
+        const lastReg = sessionStorage.getItem('lastRegisteredInstitution');
+        if (lastReg) {
+          const regObj = JSON.parse(lastReg);
+          if (regObj && regObj.institutionId) {
+            instPill.style.display = 'block';
+            instBody.innerHTML = '<strong>' + (regObj.institutionName || 'Your College') + '</strong> has been provisioned under ID <code style="color:#60a5fa; font-weight:700;">' + regObj.institutionId + '</code>. Admin Login ID: <code style="color:#34d399;">' + (regObj.adminLoginId || 'ADM-01') + '</code>.';
+          }
+        } else if (instId) {
+          instPill.style.display = 'block';
+          instBody.innerHTML = 'Institution provisioned under ID <code style="color:#60a5fa; font-weight:700;">' + instId + '</code>.';
+        }
+      } catch (e) {}
+
+      // 4. Print E-Receipt
+      const btnPrint = document.getElementById('btnPrintReceipt');
+      if (btnPrint) {
+        btnPrint.addEventListener('click', () => {
+          window.print();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

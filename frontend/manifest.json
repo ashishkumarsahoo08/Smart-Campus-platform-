@@ -1,0 +1,19 @@
+{
+  "name": "Smart Campus | Unified Institutional Portal",
+  "short_name": "SmartCampus",
+  "description": "Unified Institutional Platform for Students, Faculty, Wardens, Security, and Administrators",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": ["education", "productivity", "management"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

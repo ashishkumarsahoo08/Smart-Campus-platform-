@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.vscode
+.gemini
+.agents
+*.tmp
+*.log
+android
+deploy
+docker
+*.apk
+*.pdf
+*.pptx

@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Environment & Secrets
+.env
+cert.pem
+key.pem
+
+# Build outputs
+www/
+dist/
+android/build/
+android/.gradle/
+android/app/build/
+android/app/src/main/assets/public/
+*.apk
+*.jar
+
+# Local project artifacts
+.agents/
+frontend/assets/diagrams/
+android/build-error.txt
+
+# Build tools (re-download as needed)
+build-tools/
+
+# Runtime data & backups
+backend/data/backups/
+backend/data/logs/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+*.tmp
